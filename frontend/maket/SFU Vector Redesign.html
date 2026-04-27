@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>СФУ.Вектор — Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/tokens.css?v=paper2"/>
+<style>
+  body { background: #FFFFFF; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="components/Logo.jsx"></script>
+<script type="text/babel" src="components/Topbar.jsx"></script>
+<script type="text/babel" src="components/Sidebar.jsx"></script>
+<script type="text/babel" src="components/Footer.jsx"></script>
+<script type="text/babel" src="components/data.jsx"></script>
+<script type="text/babel" src="screens/Home.jsx"></script>
+<script type="text/babel" src="screens/Onboarding.jsx"></script>
+<script type="text/babel" src="screens/Map.jsx"></script>
+<script type="text/babel" src="screens/Events.jsx"></script>
+<script type="text/babel" src="screens/Profile.jsx"></script>
+<script type="text/babel" src="screens/Mobile.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  return (
+    <DesignCanvas title="СФУ.Вектор · Redesign" subtitle="8 экранов · «Бумага» · WCAG AA · 20 институтов">
+      <DCSection id="desktop" title="Desktop · Главные экраны">
+        <DCArtboard id="home-out" label="01 · Home — Logged out" width={1280} height={2000}>
+          <HomeScreen loggedIn={false}/>
+        </DCArtboard>
+        <DCArtboard id="home-in" label="02 · Home — Logged in (с рекомендациями)" width={1280} height={2200}>
+          <HomeScreen loggedIn={true}/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="onboarding" title="Onboarding · 3 шага">
+        <DCArtboard id="onb" label="03 · Onboarding (3 шага: институт / общежитие / интересы)" width={1100} height={760}>
+          <OnboardingScreen/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="map" title="Карта институтов · с tooltip и mobile fallback">
+        <DCArtboard id="map" label="04a · Карта институтов (wheel + tooltip)" width={1280} height={1100}>
+          <MapScreen/>
+        </DCArtboard>
+        <DCArtboard id="map-mobile" label="04b · Mobile fallback (<768px)" width={390} height={760}>
+          <MobileFrame><InstitutesMobileGrid/></MobileFrame>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="events" title="Мероприятия · desktop + empty">
+        <DCArtboard id="events" label="05 · Мероприятия — Desktop (capacity bar + fixed filters)" width={1280} height={1100}>
+          <EventsScreen empty={false}/>
+        </DCArtboard>
+        <DCArtboard id="events-empty" label="06 · Мероприятия — Empty state" width={1280} height={900}>
+          <EventsScreen empty={true}/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="profile" title="Профиль · единый раздел">
+        <DCArtboard id="profile" label="07 · Профиль (уведомления + заявки + мероприятия + настройки)" width={1280} height={1100}>
+          <ProfileScreen/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="mobile" title="Mobile · bottom nav, single column">
+        <DCArtboard id="m-home" label="08a · Mobile — Главная" width={390} height={760}>
+          <MobileHome/>
+        </DCArtboard>
+        <DCArtboard id="m-events" label="08b · Mobile — Мероприятия" width={390} height={760}>
+          <MobileEvents/>
+        </DCArtboard>
+        <DCArtboard id="m-inst" label="08c · Mobile — Институт (детальная)" width={390} height={760}>
+          <MobileInstitute/>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
