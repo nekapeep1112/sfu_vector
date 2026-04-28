@@ -130,6 +130,143 @@ function Reveal({ children, delay = 0, y = 28, as: As = 'div', style }) {
   );
 }
 
+// ─── Word-by-word reveal ──────────────────────────────────────
+function WordReveal({ children, delay = 0, stagger = 60, style, as: As = 'span' }) {
+  const [ref, shown] = useReveal();
+  const words = String(children).split(' ');
+  return (
+    <As ref={ref} style={{ display: 'inline-block', ...style }}>
+      {words.map((w, i) => (
+        <span key={i} style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top' }}>
+          <span style={{
+            display: 'inline-block',
+            transform: shown ? 'translateY(0%) rotateX(0deg)' : 'translateY(110%) rotateX(-30deg)',
+            opacity: shown ? 1 : 0,
+            transition: `transform .9s cubic-bezier(.2,.8,.2,1) ${delay + i * stagger}ms, opacity .9s ease ${delay + i * stagger}ms`,
+            willChange: 'transform, opacity',
+          }}>
+            {w}{i < words.length - 1 ? '\u00A0' : ''}
+          </span>
+        </span>
+      ))}
+    </As>
+  );
+}
+
+// ─── 3D-tilt card with spotlight ──────────────────────────────
+function TiltCard({ children, accent = '#2563EB', style, className = 'card', strength = 8 }) {
+  const ref = React.useRef(null);
+  const [t, setT] = React.useState({ rx: 0, ry: 0, mx: 50, my: 50, hover: false });
+  const onMove = (e) => {
+    const r = ref.current.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    setT({ rx: (0.5 - py) * strength, ry: (px - 0.5) * strength, mx: px * 100, my: py * 100, hover: true });
+  };
+  const onLeave = () => setT({ rx: 0, ry: 0, mx: 50, my: 50, hover: false });
+  return (
+    <div ref={ref} className={className} onMouseMove={onMove} onMouseLeave={onLeave}
+      style={{
+        ...style,
+        position: 'relative',
+        transform: `perspective(1000px) rotateX(${t.rx}deg) rotateY(${t.ry}deg) translateZ(0)`,
+        transition: t.hover ? 'transform .12s ease-out' : 'transform .5s cubic-bezier(.2,.8,.2,1)',
+        transformStyle: 'preserve-3d',
+        willChange: 'transform',
+      }}>
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 'inherit', pointerEvents: 'none',
+        background: `radial-gradient(400px circle at ${t.mx}% ${t.my}%, ${accent}1f, transparent 50%)`,
+        opacity: t.hover ? 1 : 0, transition: 'opacity .3s',
+      }}/>
+      <div style={{
+        position: 'absolute', inset: -1, borderRadius: 'inherit', pointerEvents: 'none', padding: 1,
+        background: `radial-gradient(300px circle at ${t.mx}% ${t.my}%, ${accent}, transparent 60%)`,
+        WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+        WebkitMaskComposite: 'xor', maskComposite: 'exclude',
+        opacity: t.hover ? 1 : 0, transition: 'opacity .3s',
+      }}/>
+      <div style={{ position: 'relative', transform: 'translateZ(40px)' }}>{children}</div>
+    </div>
+  );
+}
+
+// ─── Mouse-follower blob cursor (decorative, doesn't replace native) ──
+function CursorBlob() {
+  const ref = React.useRef(null);
+  const ringRef = React.useRef(null);
+  const tgt = React.useRef({ x: 0, y: 0 });
+  const cur = React.useRef({ x: 0, y: 0 });
+  const ringCur = React.useRef({ x: 0, y: 0 });
+  React.useEffect(() => {
+    const onMove = (e) => { tgt.current = { x: e.clientX, y: e.clientY }; };
+    window.addEventListener('mousemove', onMove);
+    let raf;
+    const tick = () => {
+      cur.current.x += (tgt.current.x - cur.current.x) * 0.18;
+      cur.current.y += (tgt.current.y - cur.current.y) * 0.18;
+      ringCur.current.x += (tgt.current.x - ringCur.current.x) * 0.08;
+      ringCur.current.y += (tgt.current.y - ringCur.current.y) * 0.08;
+      if (ref.current) ref.current.style.transform = `translate3d(${cur.current.x - 6}px, ${cur.current.y - 6}px, 0)`;
+      if (ringRef.current) ringRef.current.style.transform = `translate3d(${ringCur.current.x - 18}px, ${ringCur.current.y - 18}px, 0)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf); };
+  }, []);
+  return (
+    <React.Fragment>
+      <div ref={ref} style={{ position: 'fixed', top: 0, left: 0, width: 12, height: 12, borderRadius: '50%', background: '#2563EB', pointerEvents: 'none', zIndex: 9999, mixBlendMode: 'difference' }}/>
+      <div ref={ringRef} style={{ position: 'fixed', top: 0, left: 0, width: 36, height: 36, borderRadius: '50%', border: '1.5px solid rgba(37,99,235,0.6)', pointerEvents: 'none', zIndex: 9998, transition: 'width .2s, height .2s, border-color .2s' }}/>
+    </React.Fragment>
+  );
+}
+
+// ─── Scramble-digit number ─────────────────────────────────────
+function ScrambleNumber({ to, suffix = '', duration = 2000 }) {
+  const [ref, shown] = useReveal();
+  const [val, setVal] = React.useState(0);
+  const [scramble, setScramble] = React.useState(0);
+  React.useEffect(() => {
+    if (!shown) return;
+    let raf, t0;
+    const step = (t) => {
+      if (!t0) t0 = t;
+      const k = Math.min(1, (t - t0) / duration);
+      const eased = 1 - Math.pow(1 - k, 4);
+      setVal(Math.round(to * eased));
+      // jitter early on
+      if (k < 0.7) {
+        setScramble(Math.floor(Math.random() * Math.pow(10, String(to).length)) % to);
+      } else {
+        setScramble(0);
+      }
+      if (k < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [shown, to, duration]);
+  const display = scramble ? scramble : val;
+  return <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>{display.toLocaleString('ru-RU')}{suffix}</span>;
+}
+
+// ─── Floating-icon orbit ──────────────────────────────────────
+function FloatIcon({ x, y, size = 56, label, tone = '#2563EB', delay = 0, scrollY = 0, factor = 0.05, rotate = 0 }) {
+  return (
+    <div style={{
+      position: 'absolute', left: x, top: y, width: size, height: size,
+      borderRadius: 14, background: '#FFFFFF', border: '1px solid var(--border)',
+      boxShadow: '0 10px 28px rgba(15,23,42,0.10)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: size > 48 ? 22 : 18, fontWeight: 800, color: tone,
+      animation: `bob 3.6s ease-in-out ${delay}ms infinite`,
+      transform: `translateY(${scrollY * factor}px) rotate(${rotate}deg)`,
+      transition: 'transform .1s linear',
+      willChange: 'transform',
+    }}>{label}</div>
+  );
+}
+
 // ─── Photo placeholder — abstract gradient + grid pattern ──────
 function PhotoPH({ tone = '#2563EB', label = '', height = 320, style }) {
   return (
@@ -159,4 +296,4 @@ function PhotoPH({ tone = '#2563EB', label = '', height = 320, style }) {
   );
 }
 
-Object.assign(window, { COUNTERS, STEPS, FEATURES, AUDIENCES, STORIES, useReveal, AnimatedNumber, useScrollY, MagneticButton, Reveal, PhotoPH });
+Object.assign(window, { COUNTERS, STEPS, FEATURES, AUDIENCES, STORIES, useReveal, AnimatedNumber, useScrollY, MagneticButton, Reveal, PhotoPH, WordReveal, TiltCard, CursorBlob, ScrambleNumber, FloatIcon });

@@ -1,10 +1,13 @@
 'use client';
 
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Fragment, useState } from 'react';
 import { Logo } from '@/components/Logo';
 import { INSTITUTES } from '@/lib/mock-data';
 
 export default function OnboardingPage() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [institute, setInstitute] = useState('');
   const [dorm, setDorm] = useState('');
@@ -36,8 +39,8 @@ export default function OnboardingPage() {
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 50% 60% at 30% 20%, rgba(79,127,255,0.18), transparent 50%), radial-gradient(ellipse 60% 60% at 80% 80%, rgba(155,92,255,0.18), transparent 50%)' }} />
 
       <div style={{ position: 'relative', padding: '24px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Logo/>
-        <button style={{ fontSize: 13, color: 'var(--fg-3)' }}>Пропустить →</button>
+        <Link href="/" style={{ textDecoration: 'none' }}><Logo/></Link>
+        <Link href="/register" style={{ fontSize: 13, color: 'var(--fg-3)' }}>Пропустить →</Link>
       </div>
 
       <div style={{ position: 'relative', maxWidth: 720, margin: '40px auto', padding: '0 24px' }}>
@@ -128,7 +131,13 @@ export default function OnboardingPage() {
             <button onClick={() => setStep(Math.max(1, step - 1))} className="btn btn-ghost" disabled={step === 1} style={{ opacity: step === 1 ? 0.4 : 1 }}>
               ← Назад
             </button>
-            <button onClick={() => setStep(Math.min(3, step + 1))} className="btn btn-primary">
+            <button
+              onClick={() => {
+                if (step === 3) router.push('/register');
+                else setStep(step + 1);
+              }}
+              className="btn btn-primary"
+            >
               {step === 3 ? 'Завершить' : 'Далее'} →
             </button>
           </div>

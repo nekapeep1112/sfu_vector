@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Logo, LogoMark } from './Logo';
@@ -49,13 +50,15 @@ export function Sidebar({ loggedIn = false, compact = false }: SidebarProps) {
       overflowY: 'auto',
     }}>
       <div style={{ padding: compact ? '0 0 16px' : '0 8px 20px', borderBottom: '1px solid var(--border)', marginBottom: 8 }}>
-        {compact ? (
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <LogoMark px={36}/>
-          </div>
-        ) : (
-          <Logo />
-        )}
+        <Link href="/" title="На лендинг" style={{ display: 'block', textDecoration: 'none', borderRadius: 8 }}>
+          {compact ? (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <LogoMark px={36}/>
+            </div>
+          ) : (
+            <Logo />
+          )}
+        </Link>
       </div>
 
       <nav className="col gap-1">
