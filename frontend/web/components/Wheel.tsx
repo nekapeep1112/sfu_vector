@@ -106,7 +106,7 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
         <circle r={rInner - 6} fill="url(#hub-bg)" stroke="var(--border-strong)" strokeWidth="1"/>
         <circle r={rInner - 6} fill="none" stroke="url(#ring-grad)" strokeWidth="1" opacity="0.4"/>
 
-        <g transform="translate(0 -56)">
+        <g transform="translate(0 -22)">
           {(() => {
             const R = 26;
             const verts = Array.from({ length: 6 }, (_, i) => {
@@ -126,26 +126,9 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
           })()}
         </g>
 
-        <text x="0" y="14" textAnchor="middle" fontSize="22" fontWeight="800" style={{ letterSpacing: '-0.01em' }}>
+        <text x="0" y="32" textAnchor="middle" fontSize="22" fontWeight="800" style={{ letterSpacing: '-0.01em' }}>
           <tspan fill="var(--fg)">СФУ</tspan><tspan fill="url(#center-grad)">.Вектор</tspan>
         </text>
-
-        <line x1="-50" x2="50" y1="28" y2="28" stroke="var(--border)" strokeWidth="1"/>
-
-        <g>
-          <text x="-44" y="50" textAnchor="middle" fontSize="18" fontWeight="800" fill="var(--fg)">20</text>
-          <text x="-44" y="64" textAnchor="middle" fontSize="9" fill="var(--fg-4)">институтов</text>
-        </g>
-        <g>
-          <text x="0" y="50" textAnchor="middle" fontSize="18" fontWeight="800" fill="var(--fg)">50<tspan fontSize="12">+</tspan></text>
-          <text x="0" y="64" textAnchor="middle" fontSize="9" fill="var(--fg-4)">организаций</text>
-        </g>
-        <g>
-          <text x="44" y="50" textAnchor="middle" fontSize="18" fontWeight="800" fill="var(--fg)">12</text>
-          <text x="44" y="64" textAnchor="middle" fontSize="9" fill="var(--fg-4)">наборов</text>
-        </g>
-
-        <text x="0" y="-86" textAnchor="middle" fontSize="9" fill="var(--fg-4)" style={{ letterSpacing: '0.2em' }}>ИНТЕРАКТИВНАЯ КАРТА</text>
       </svg>
 
       {hovered && (() => {

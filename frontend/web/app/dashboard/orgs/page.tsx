@@ -20,15 +20,12 @@ export default function OrgsPage() {
     <div style={{ maxWidth: 1440, margin: '0 auto', padding: 32, display: 'grid', gridTemplateColumns: '1fr 380px', gap: 24 }}>
       {/* main */}
       <div>
-        <div className="row" style={{ marginBottom: 8, gap: 8 }}>
-          <button style={{ color: 'var(--fg-3)', fontSize: 13 }}>← Организации</button>
-        </div>
-        <h1 className="h2" style={{ margin: 0, marginBottom: 8 }}>{isDorms ? 'Карта общежитий' : 'Карта институтов'}</h1>
-        <div style={{ fontSize: 13, color: 'var(--fg-3)', marginBottom: 20 }}>
-          {isDorms
-            ? `${DORMS.length} общежитий · 3 кампуса · ${DORMS.reduce((a, d) => a + d.capacity, 0).toLocaleString('ru')} мест`
-            : '20 институтов · 50+ организаций · 5 000+ студентов'}
-        </div>
+        <h1 className="h2" style={{ margin: 0, marginBottom: isDorms ? 8 : 20 }}>{isDorms ? 'Карта общежитий' : 'Карта институтов'}</h1>
+        {isDorms && (
+          <div style={{ fontSize: 13, color: 'var(--fg-3)', marginBottom: 20 }}>
+            {`${DORMS.length} общежитий · 3 кампуса · ${DORMS.reduce((a, d) => a + d.capacity, 0).toLocaleString('ru')} мест`}
+          </div>
+        )}
 
         <div style={{ display: 'flex', gap: 4, padding: 4, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, marginBottom: 20, width: 'fit-content' }}>
           {['Список', 'Карта', 'Общежития'].map(t => (

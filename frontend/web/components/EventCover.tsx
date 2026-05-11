@@ -21,13 +21,7 @@ export function EventCover({ event, height = 160 }: { event: EventItem; height?:
         <rect width="100%" height="100%" fill={`url(#p-${event.id})`}/>
       </svg>
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.5) 100%)' }} />
-      <div style={{ position: 'absolute', top: 14, left: 14, right: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div style={{
-          padding: '4px 10px', borderRadius: 999,
-          background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)',
-          fontSize: 11, fontWeight: 600, color: 'white',
-          border: '1px solid rgba(255,255,255,0.2)',
-        }}>{t.label}</div>
+      <div style={{ position: 'absolute', top: 14, left: 14, right: 14, display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
         <div style={{ fontSize: 56, fontWeight: 800, color: 'rgba(255,255,255,0.18)', letterSpacing: '-0.04em', lineHeight: 1, fontFamily: 'Manrope' }}>{initials}</div>
       </div>
       <div style={{ position: 'absolute', bottom: 14, left: 14, right: 14, fontSize: 15, fontWeight: 700, color: 'white', lineHeight: 1.2, letterSpacing: '-0.005em' }}>
