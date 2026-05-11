@@ -12,7 +12,16 @@
       "Bash(curl -s -o /dev/null -w \"ticket1=%{http_code}\\\\n\" \"http://localhost:3000/dashboard/events/1/ticket\")",
       "Bash(curl -s \"http://localhost:3000/dashboard/profile\")",
       "Bash(curl -s -o /dev/null -w \"events_list=%{http_code}\\\\n\" \"http://localhost:3000/dashboard/events\")",
-      "Bash(curl -s \"http://localhost:3000/dashboard/events\")"
+      "Bash(curl -s \"http://localhost:3000/dashboard/events\")",
+      "PowerShell(npx tsc --noEmit)",
+      "PowerShell(try { \\(Invoke-WebRequest -Uri http://localhost:3000 -Method Head -TimeoutSec 3 -UseBasicParsing -ErrorAction Stop\\).StatusCode } catch { \"no-server\" })",
+      "PowerShell($routes = @\\('/', '/login', '/register', '/onboarding', '/dashboard', '/dashboard/events', '/dashboard/events/1', '/dashboard/events/1/register', '/dashboard/events/1/register/success', '/dashboard/events/1/ticket', '/dashboard/orgs', '/dashboard/profile'\\); foreach \\($r in $routes\\) { try { $code = \\(Invoke-WebRequest -Uri \\(\"http://localhost:3000\" + $r\\) -Method Get -TimeoutSec 20 -UseBasicParsing -ErrorAction Stop\\).StatusCode } catch { $code = \"ERR:\" + $_.Exception.Message }; \"{0,-50} {1}\" -f $r, $code })",
+      "PowerShell(try { \\(Invoke-WebRequest -Uri http://localhost:3000/org/studsovet-ikit -Method Get -TimeoutSec 20 -UseBasicParsing -ErrorAction Stop\\).StatusCode } catch { $_.Exception.Response.StatusCode.value__ })",
+      "PowerShell($html = \\(Invoke-WebRequest -Uri http://localhost:3000/dashboard -UseBasicParsing\\).Content; \"СФУ·Вектор header: $\\($html -match 'СФУ.Вектор'\\)\"; \"ContextSwitcher trigger \\(Иван Петров\\): $\\($html -match 'Иван Петров'\\)\"; \"Sub label \\(Личный профиль\\): $\\($html -match 'Личный профиль'\\)\")",
+      "PowerShell($routes = @\\('/', '/login', '/register', '/onboarding', '/dashboard', '/dashboard/events', '/dashboard/events/1', '/dashboard/events/1/register', '/dashboard/events/1/register/success', '/dashboard/events/1/ticket', '/dashboard/orgs', '/dashboard/profile'\\); foreach \\($r in $routes\\) { try { $code = \\(Invoke-WebRequest -Uri \\(\"http://localhost:3000\" + $r\\) -Method Get -TimeoutSec 20 -UseBasicParsing -ErrorAction Stop\\).StatusCode } catch { $code = \"ERR\" }; \"{0,-50} {1}\" -f $r, $code })",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__click"
     ]
   }
 }

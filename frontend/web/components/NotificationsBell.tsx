@@ -82,7 +82,7 @@ export function NotificationsBell() {
           style={{
             position: 'absolute',
             top: 'calc(100% + 10px)',
-            right: 0,
+            left: 0,
             width: 380,
             maxHeight: 'calc(100vh - 100px)',
             background: 'var(--surface)',
