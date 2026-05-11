@@ -128,7 +128,7 @@ export function tonalShift(hex: string): string {
 export type OrgRole = 'owner' | 'editor' | 'viewer';
 
 export interface Organization {
-  id: string;
+  id: number;
   name: string;
   short: string;
   color: string;
@@ -138,9 +138,9 @@ export interface Organization {
 }
 
 export const ORGANIZATIONS: Organization[] = [
-  { id: 'studsovet-ikit', name: 'Студсовет ИКИТ',          short: 'СС', color: '#4F7FFF', verified: true, role: 'owner',  members: 12 },
-  { id: 'volunteer-sfu',  name: 'Волонтёрский центр СФУ',  short: 'ВЦ', color: '#3DD68C', verified: true, role: 'editor', members: 47 },
-  { id: 'media-center',   name: 'Студенческий медиацентр', short: 'МД', color: '#9B5CFF', verified: true, role: 'editor', members: 24 },
+  { id: 1, name: 'Студсовет ИКИТ',          short: 'СС', color: '#4F7FFF', verified: true, role: 'owner',  members: 12 },
+  { id: 2, name: 'Волонтёрский центр СФУ',  short: 'ВЦ', color: '#3DD68C', verified: true, role: 'editor', members: 47 },
+  { id: 3, name: 'Студенческий медиацентр', short: 'МД', color: '#9B5CFF', verified: true, role: 'editor', members: 24 },
 ];
 
 export interface CurrentUser {
@@ -150,7 +150,7 @@ export interface CurrentUser {
   institute: string;
   course: number;
   avatarGrad: string;
-  memberships: string[];
+  memberships: number[];
   handle: string;
 }
 
@@ -161,7 +161,7 @@ export const CURRENT_USER: CurrentUser = {
   institute: 'ИКИТ',
   course: 3,
   avatarGrad: 'linear-gradient(135deg, #F5A524, #F25E5E)',
-  memberships: ['studsovet-ikit', 'volunteer-sfu', 'media-center'],
+  memberships: [1, 2, 3],
   handle: 'ip_2024',
 };
 

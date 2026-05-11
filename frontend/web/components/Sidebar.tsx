@@ -30,14 +30,14 @@ const PERSONAL_ROUTES: Record<PersonalItemId, string> = {
   profile: '/dashboard/profile',
 };
 
-function orgRoutes(slug: string): Record<OrgItemId, string> {
+function orgRoutes(id: number): Record<OrgItemId, string> {
   return {
-    dashboard: `/org/${slug}`,
-    events: `/org/${slug}/events`,
-    inbox: `/org/${slug}/applications`,
-    team: `/org/${slug}/team`,
-    analytics: `/org/${slug}/analytics`,
-    settings: `/org/${slug}/settings`,
+    dashboard: `/organizations/${id}`,
+    events: `/organizations/${id}/events`,
+    inbox: `/organizations/${id}/applications`,
+    team: `/organizations/${id}/team`,
+    analytics: `/organizations/${id}/analytics`,
+    settings: `/organizations/${id}/settings`,
   };
 }
 
@@ -133,18 +133,6 @@ export function Sidebar({ loggedIn = false, compact = false, context = { type: '
       </nav>
 
       <div style={{ flex: 1 }} />
-
-      {!compact && !isOrg && (
-        <div style={{ padding: 16, borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80, borderRadius: '50%', background: 'var(--grad)', opacity: 0.15, filter: 'blur(20px)' }} />
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--grad-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10, border: '1px solid rgba(155,92,255,0.3)' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="4"/></svg>
-          </div>
-          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Предложить идею</div>
-          <div style={{ fontSize: 11, color: 'var(--fg-3)', lineHeight: 1.45, marginBottom: 12 }}>Есть идея, как сделать студенческую жизнь лучше?</div>
-          <button className="btn btn-ghost btn-sm" style={{ width: '100%', justifyContent: 'center' }}>Предложить</button>
-        </div>
-      )}
 
       {!compact && isOrg && (
         <button

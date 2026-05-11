@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CURRENT_USER, ORGANIZATIONS, tonalShift, type OrgRole } from '@/lib/mock-data';
 
-export type SidebarContext = { type: 'personal' } | { type: 'org'; orgId: string };
+export type SidebarContext = { type: 'personal' } | { type: 'org'; orgId: number };
 
 interface ContextSwitcherProps {
   context: SidebarContext;
@@ -54,9 +54,9 @@ export function ContextSwitcher({ context, forceOpen = false, emptyMemberships =
     router.push('/dashboard');
   }
 
-  function goOrg(orgId: string) {
+  function goOrg(orgId: number) {
     setOpen(false);
-    router.push('/org/' + orgId);
+    router.push('/organizations/' + orgId);
   }
 
   return (

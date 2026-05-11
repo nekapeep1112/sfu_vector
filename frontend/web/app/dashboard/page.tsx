@@ -63,24 +63,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* STATS STRIP */}
-      <section style={{ marginTop: 24, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-        {[
-          { v: '20', l: 'институтов', icon: '◆' },
-          { v: '30', l: 'общежитий', icon: '◐' },
-          { v: '50+', l: 'студенческих организаций', icon: '◇' },
-          { v: '1000+', l: 'мероприятий в год', icon: '◉' },
-        ].map((s, i) => (
-          <div key={i} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 20 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--grad-soft)', border: '1px solid rgba(155,92,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'var(--violet)' }}>{s.icon}</div>
-            <div className="col">
-              <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1 }}>{s.v}</div>
-              <div style={{ fontSize: 12, color: 'var(--fg-3)', marginTop: 4 }}>{s.l}</div>
-            </div>
-          </div>
-        ))}
-      </section>
-
       {/* PERSONALIZED — only logged in */}
       {loggedIn && (
         <section style={{ marginTop: 48 }}>
