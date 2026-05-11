@@ -1,16 +1,20 @@
+import Link from 'next/link';
 import { EVENT_TYPES, type EventItem } from '@/lib/mock-data';
 import { EventCover, CapacityBar, AvatarStack } from '../EventCover';
 
 export function EventRow({ event }: { event: EventItem }) {
   const t = EVENT_TYPES[event.type];
   const beFirst = event.registered === 0 || event.registered < 5;
+  const href = `/dashboard/events/${event.id}`;
   return (
-    <div className="card card-hover" style={{
+    <Link href={href} className="card card-hover" style={{
       padding: 16,
       display: 'grid',
       gridTemplateColumns: '180px minmax(0, 1fr) 220px',
       gap: 20,
       alignItems: 'stretch',
+      textDecoration: 'none',
+      color: 'inherit',
     }}>
       <div style={{ position: 'relative', height: 140 }}>
         <EventCover event={event} height={140}/>
@@ -65,8 +69,8 @@ export function EventRow({ event }: { event: EventItem }) {
           <CapacityBar registered={event.registered} capacity={event.capacity} color={t.color}/>
           <AvatarStack count={event.registered}/>
         </div>
-        <button className="btn btn-primary btn-sm" style={{ justifyContent: 'center', height: 36, width: '100%' }}>Участвовать</button>
+        <span className="btn btn-primary btn-sm" style={{ justifyContent: 'center', height: 36, width: '100%' }}>Участвовать</span>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -29,6 +29,11 @@
 <script type="text/babel" src="screens/Onboarding.jsx"></script>
 <script type="text/babel" src="screens/Map.jsx"></script>
 <script type="text/babel" src="screens/Events.jsx"></script>
+<script type="text/babel" src="screens/EventDetail.jsx"></script>
+<script type="text/babel" src="screens/OrgDashboard.jsx?v=2"></script>
+<script type="text/babel" src="screens/EventCreate.jsx"></script>
+<script type="text/babel" src="screens/OrgApplications.jsx?v=2"></script>
+<script type="text/babel" src="screens/EventRegister.jsx"></script>
 <script type="text/babel" src="screens/Profile.jsx"></script>
 <script type="text/babel" src="screens/Mobile.jsx"></script>
 
@@ -66,6 +71,78 @@ function App() {
         </DCArtboard>
         <DCArtboard id="events-empty" label="06 · Мероприятия — Empty state" width={1280} height={900}>
           <EventsScreen empty={true}/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="event-detail" title="Детальная карточка · Desktop">
+        <DCArtboard id="event-detail" label="09 · Детальная карточка мероприятия" width={1280} height={2400}>
+          <EventDetailScreen event={EVENTS[0]}/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="sidebar-context" title="Sidebar · переключатель контекста">
+        <DCArtboard id="sb-personal-closed" label="A1 · Personal — свитчер свёрнут" width={260} height={680}>
+          <div style={{background:'var(--bg-2)',height:'100%'}}><Sidebar context={{type:'personal'}} active="home" loggedIn={true}/></div>
+        </DCArtboard>
+        <DCArtboard id="sb-personal-open" label="A2 · Personal — popover открыт (3 организации)" width={260} height={680}>
+          <div style={{background:'var(--bg-2)',height:'100%'}}><Sidebar context={{type:'personal'}} active="home" loggedIn={true} forceSwitcherOpen={true}/></div>
+        </DCArtboard>
+        <DCArtboard id="sb-empty" label="A3 · Personal — нет ни одной организации" width={260} height={680}>
+          <div style={{background:'var(--bg-2)',height:'100%'}}><Sidebar context={{type:'personal'}} active="home" loggedIn={true} forceSwitcherOpen={true} emptyMemberships={true}/></div>
+        </DCArtboard>
+        <DCArtboard id="sb-org" label="A4 · Режим организации (Студсовет ИКИТ)" width={260} height={680}>
+          <div style={{background:'var(--bg-2)',height:'100%'}}><Sidebar context={{type:'org', orgId:'studsovet-ikit'}} active="dashboard" loggedIn={true}/></div>
+        </DCArtboard>
+        <DCArtboard id="sb-org-open" label="A5 · Режим организации — popover открыт" width={260} height={680}>
+          <div style={{background:'var(--bg-2)',height:'100%'}}><Sidebar context={{type:'org', orgId:'studsovet-ikit'}} active="dashboard" loggedIn={true} forceSwitcherOpen={true}/></div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="org-dashboard" title="Организатор · дашборд">
+        <DCArtboard id="org-dashboard" label="O1 · Дашборд организации (Студсовет ИКИТ)" width={1280} height={1800}>
+          <OrgDashboardScreen orgId="studsovet-ikit"/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="event-create" title="Организатор · создание мероприятия (визард)">
+        <DCArtboard id="ec-step1" label="C1 · Шаг 1 — Основное" width={1280} height={1200}>
+          <EventCreateScreen step={1}/>
+        </DCArtboard>
+        <DCArtboard id="ec-step1-uploaded" label="C1b · Шаг 1 — С загруженной картинкой" width={1280} height={1200}>
+          <EventCreateScreen step={1} hasCover={true}/>
+        </DCArtboard>
+        <DCArtboard id="ec-step2" label="C2 · Шаг 2 — Когда и где" width={1280} height={1100}>
+          <EventCreateScreen step={2}/>
+        </DCArtboard>
+        <DCArtboard id="ec-step3" label="C3 · Шаг 3 — Регистрация" width={1280} height={1300}>
+          <EventCreateScreen step={3}/>
+        </DCArtboard>
+        <DCArtboard id="ec-step4" label="C4 · Шаг 4 — Превью и публикация" width={1280} height={1100}>
+          <EventCreateScreen step={4}/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="org-applications" title="Организатор · заявки">
+        <DCArtboard id="org-apps" label="A1 · Заявки — основной вид" width={1440} height={1100}>
+          <OrgApplicationsScreen state="default"/>
+        </DCArtboard>
+        <DCArtboard id="org-apps-bulk" label="A2 · Заявки — массовые действия" width={1440} height={1100}>
+          <OrgApplicationsScreen state="bulk"/>
+        </DCArtboard>
+        <DCArtboard id="org-apps-empty" label="A3 · Заявки — все разобраны" width={1440} height={700}>
+          <OrgApplicationsScreen state="empty"/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="event-register" title="Студент · регистрация и билет">
+        <DCArtboard id="reg-form" label="R1 · Регистрация — анкета (для хакатона)" width={1280} height={1500}>
+          <EventRegisterScreen state="form"/>
+        </DCArtboard>
+        <DCArtboard id="reg-success" label="R2 · Успех — ожидает одобрения" width={1280} height={900}>
+          <EventRegisterScreen state="success"/>
+        </DCArtboard>
+        <DCArtboard id="reg-ticket" label="R3 · Мой билет (QR + код)" width={1280} height={1100}>
+          <EventRegisterScreen state="ticket"/>
         </DCArtboard>
       </DCSection>
 

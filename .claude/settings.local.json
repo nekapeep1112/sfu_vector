@@ -1,7 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:about.sfu-kras.ru)"
+      "WebFetch(domain:about.sfu-kras.ru)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o NUL -w \"%{http_code}\" http://localhost:3000/dashboard/events/999)",
+      "Bash(curl -s -o NUL -w \"%{http_code}\" http://localhost:3000/dashboard/events/1/register)",
+      "Bash(curl -s -o /dev/null -w \"profile=%{http_code}\\\\n\" \"http://localhost:3000/dashboard/profile\")",
+      "Bash(curl -s -o /dev/null -w \"event1=%{http_code}\\\\n\" \"http://localhost:3000/dashboard/events/1\")",
+      "Bash(curl -s -o /dev/null -w \"event2=%{http_code}\\\\n\" \"http://localhost:3000/dashboard/events/2\")",
+      "Bash(curl -s -o /dev/null -w \"ticket1=%{http_code}\\\\n\" \"http://localhost:3000/dashboard/events/1/ticket\")",
+      "Bash(curl -s \"http://localhost:3000/dashboard/profile\")",
+      "Bash(curl -s -o /dev/null -w \"events_list=%{http_code}\\\\n\" \"http://localhost:3000/dashboard/events\")",
+      "Bash(curl -s \"http://localhost:3000/dashboard/events\")"
     ]
   }
 }

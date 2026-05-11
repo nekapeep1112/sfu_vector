@@ -133,3 +133,21 @@ function AvatarStack({ count }) {
   );
 }
 window.AvatarStack = AvatarStack;
+
+// Organizations user belongs to / can switch into
+const ORGANIZATIONS = [
+  { id: 'studsovet-ikit', name: 'Студсовет ИКИТ',          short: 'СС', color: '#4F7FFF', verified: true, role: 'owner',  members: 12 },
+  { id: 'volunteer-sfu',  name: 'Волонтёрский центр СФУ',  short: 'ВЦ', color: '#3DD68C', verified: true, role: 'editor', members: 47 },
+  { id: 'media-center',   name: 'Студенческий медиацентр', short: 'МД', color: '#9B5CFF', verified: true, role: 'editor', members: 24 },
+];
+window.ORGANIZATIONS = ORGANIZATIONS;
+
+const CURRENT_USER = {
+  name: 'Иван Петров',
+  initials: 'ИП',
+  institute: 'ИКИТ',
+  course: 3,
+  avatarGrad: 'linear-gradient(135deg, #F5A524, #F25E5E)',
+  memberships: ['studsovet-ikit', 'volunteer-sfu', 'media-center'],
+};
+window.CURRENT_USER = CURRENT_USER;

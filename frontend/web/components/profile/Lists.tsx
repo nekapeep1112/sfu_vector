@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { EVENTS } from '@/lib/mock-data';
 import { EventCover } from '../EventCover';
 
@@ -35,12 +36,24 @@ export function NotificationsList() {
 
 type AppStatus = 'review' | 'approved' | 'registered' | 'rejected';
 
+function appHref(status: AppStatus, eventId: number): string {
+  switch (status) {
+    case 'registered':
+    case 'approved':
+      return `/dashboard/events/${eventId}/ticket`;
+    case 'review':
+      return `/dashboard/events/${eventId}/register/success`;
+    case 'rejected':
+      return `/dashboard/events/${eventId}`;
+  }
+}
+
 export function ApplicationsList() {
-  const apps: { org: string; status: AppStatus; tag: string; date: string }[] = [
-    { org: 'Студенческий медиацентр', status: 'review', tag: 'На рассмотрении', date: '12 мая 2026' },
-    { org: 'Волонтёрский центр СФУ', status: 'approved', tag: 'Одобрено', date: '8 мая 2026' },
-    { org: 'Хакатон Siberian Hack 2026', status: 'registered', tag: 'Зарегистрирован', date: '6 мая 2026' },
-    { org: 'Клуб робототехники', status: 'rejected', tag: 'Отклонено', date: '2 мая 2026' },
+  const apps: { org: string; status: AppStatus; tag: string; date: string; eventId: number }[] = [
+    { org: 'Студенческий медиацентр',  status: 'review',     tag: 'На рассмотрении', date: '12 мая 2026', eventId: 2 },
+    { org: 'Волонтёрский центр СФУ',   status: 'approved',   tag: 'Одобрено',        date: '8 мая 2026',  eventId: 3 },
+    { org: 'Хакатон Siberian Hack 2026', status: 'registered', tag: 'Зарегистрирован', date: '6 мая 2026',  eventId: 1 },
+    { org: 'Клуб робототехники',       status: 'rejected',   tag: 'Отклонено',       date: '2 мая 2026',  eventId: 4 },
   ];
   const colors: Record<AppStatus, string> = { review: 'var(--amber)', approved: 'var(--green)', registered: 'var(--blue)', rejected: 'var(--red)' };
   return (
@@ -53,7 +66,7 @@ export function ApplicationsList() {
             <div style={{ fontSize: 12, color: 'var(--fg-4)', marginTop: 2 }}>Заявка от {a.date}</div>
           </div>
           <span style={{ padding: '6px 12px', borderRadius: 8, background: `${colors[a.status]}20`, border: `1px solid ${colors[a.status]}40`, color: colors[a.status], fontSize: 12, fontWeight: 600 }}>{a.tag}</span>
-          <button className="btn btn-ghost btn-sm">Открыть →</button>
+          <Link href={appHref(a.status, a.eventId)} className="btn btn-ghost btn-sm">Открыть →</Link>
         </div>
       ))}
     </div>
@@ -64,13 +77,18 @@ export function MyEventsList() {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
       {EVENTS.slice(0, 4).map(e => (
-        <div key={e.id} className="card card-hover" style={{ padding: 0, overflow: 'hidden' }}>
+        <Link
+          key={e.id}
+          href={`/dashboard/events/${e.id}/ticket`}
+          className="card card-hover"
+          style={{ padding: 0, overflow: 'hidden', textDecoration: 'none', color: 'inherit', display: 'block' }}
+        >
           <EventCover event={e} height={120}/>
           <div style={{ padding: 16 }}>
             <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>{e.title}</div>
             <div style={{ fontSize: 12, color: 'var(--fg-3)' }}>{e.date.d} {e.date.m} · {e.time}</div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
