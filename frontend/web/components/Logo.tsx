@@ -59,7 +59,7 @@ export function Logo({ size = 'md', tagline = true }: { size?: 'sm' | 'md' | 'lg
         }}>
           <span style={{ color: 'var(--fg)' }}>СФУ</span>
           <span style={{
-            background: 'linear-gradient(90deg, var(--blue) 0%, var(--violet) 100%)',
+            background: 'linear-gradient(90deg, #4F7FFF 0%, #9B5CFF 100%)',
             WebkitBackgroundClip: 'text',
             backgroundClip: 'text',
             color: 'transparent',

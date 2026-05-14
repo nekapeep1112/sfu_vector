@@ -103,7 +103,12 @@ export function Sidebar({ loggedIn = false, compact = false, context = { type: '
           <Link href="/" aria-label="На главную" style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '4px 4px 12px', textDecoration: 'none', color: 'inherit' }}>
             <LogoMark px={32}/>
             <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.01em', color: 'var(--fg)', lineHeight: 1 }}>
-              СФУ<span className="text-grad">.Вектор</span>
+              СФУ<span style={{
+                background: 'linear-gradient(135deg, #4F7FFF 0%, #9B5CFF 100%)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}>.Вектор</span>
             </div>
           </Link>
           <ContextSwitcher context={context}/>
