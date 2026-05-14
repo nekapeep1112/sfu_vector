@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { LogoMark } from './Logo';
 import { ContextSwitcher, type SidebarContext } from './org/ContextSwitcher';
+import { useTheme } from './theme/ThemeProvider';
 
 type PersonalItemId = 'home' | 'orgs' | 'events' | 'profile';
 type OrgItemId = 'dashboard' | 'events' | 'inbox' | 'team' | 'analytics' | 'settings';
@@ -135,6 +136,8 @@ export function Sidebar({ loggedIn = false, compact = false, context = { type: '
 
       <div style={{ flex: 1 }} />
 
+      <ThemeToggle compact={compact} />
+
       {!compact && isOrg && (
         <button
           onClick={() => router.push('/dashboard')}
@@ -205,6 +208,45 @@ function SidebarItem({
       ) : null}
     </button>
   );
+}
+
+function ThemeToggle({ compact }: { compact: boolean }) {
+  const { theme, toggle } = useTheme();
+  const isDark = theme === 'dark';
+  const [hover, setHover] = useState(false);
+  const label = isDark ? 'Светлая тема' : 'Тёмная тема';
+  return (
+    <button
+      onClick={toggle}
+      title={label}
+      aria-label={label}
+      aria-pressed={isDark}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        width: '100%',
+        padding: compact ? '12px' : '11px 14px',
+        borderRadius: 10,
+        background: hover ? 'var(--bg-2)' : 'transparent',
+        border: '1px solid transparent',
+        color: 'var(--fg-3)',
+        display: 'flex', alignItems: 'center', gap: 12,
+        justifyContent: compact ? 'center' : 'flex-start',
+        fontSize: 14, fontWeight: 500, cursor: 'pointer',
+        transition: 'all .15s',
+      }}
+    >
+      {isDark ? <IconSun/> : <IconMoon/>}
+      {!compact && <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>}
+    </button>
+  );
+}
+
+function IconSun() {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>;
+}
+function IconMoon() {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>;
 }
 
 function IconHome() {
