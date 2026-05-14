@@ -115,32 +115,138 @@ export function MyEventsList() {
   );
 }
 
-export function SettingsPanel({ onChangeInterests }: { onChangeInterests?: () => void }) {
-  const interestsLabels = CURRENT_USER.interests
-    .map((id) => INTEREST_OPTIONS.find((o) => o.id === id)?.label)
-    .filter(Boolean)
-    .join(', ');
+function SubHeader({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <div className="card" style={{ padding: 24 }}>
-      <div className="col gap-5">
-        <SettingRow label="Институт" value="ИКИТ — Институт космических и информационных технологий"/>
-        <SettingRow label="Общежитие" value="Общежитие №7"/>
-        <SettingRow label="Email" value="petrov.iv@sfu-kras.ru"/>
-        <SettingRow label="Интересы" value={interestsLabels} onAction={onChangeInterests}/>
-        <SettingRow label="Уведомления" value="Email + Telegram"/>
-      </div>
-    </div>
+    <div style={{
+      fontSize: 11, color: 'var(--fg-4)',
+      textTransform: 'uppercase', letterSpacing: '0.06em',
+      fontWeight: 700, marginBottom: 12,
+      ...style,
+    }}>{children}</div>
   );
 }
 
-function SettingRow({ label, value, onAction }: { label: string; value: string; onAction?: () => void }) {
+const CHECKBOX_STYLE: React.CSSProperties = {
+  width: 18, height: 18, accentColor: 'var(--blue)', cursor: 'pointer', flexShrink: 0,
+};
+
+export function SettingsPanel() {
+  const [notif, setNotif] = useState({
+    newEvents: true,
+    applicationUpdates: true,
+    reminders: true,
+    weeklyDigest: false,
+  });
+  const [privacy, setPrivacy] = useState({
+    publicProfile: true,
+    emailPublic: CURRENT_USER.emailPublic ?? false,
+  });
+
+  const updateNotif = (patch: Partial<typeof notif>) => {
+    const next = { ...notif, ...patch };
+    setNotif(next);
+    console.log('TODO save notif settings', next);
+  };
+  const updatePrivacy = (patch: Partial<typeof privacy>) => {
+    const next = { ...privacy, ...patch };
+    setPrivacy(next);
+    console.log('TODO save privacy', next);
+  };
+
+  const typeRow = (label: string, key: 'newEvents' | 'applicationUpdates' | 'reminders' | 'weeklyDigest') => (
+    <label style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '6px 0', cursor: 'pointer', fontSize: 14, color: 'var(--fg)' }}>
+      <input
+        type="checkbox"
+        checked={notif[key]}
+        onChange={(e) => updateNotif({ [key]: e.target.checked } as Partial<typeof notif>)}
+        style={CHECKBOX_STYLE}
+      />
+      {label}
+    </label>
+  );
+
   return (
-    <div className="row" style={{ justifyContent: 'space-between', paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
-      <div className="col">
-        <div style={{ fontSize: 12, color: 'var(--fg-4)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>{label}</div>
-        <div style={{ fontSize: 14, color: 'var(--fg)', marginTop: 4 }}>{value}</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* SECTION 1: Уведомления */}
+      <div className="card" style={{ padding: 24 }}>
+        <h3 className="h3" style={{ margin: 0, marginBottom: 20 }}>Уведомления</h3>
+
+        <SubHeader>Каналы</SubHeader>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 14, color: 'var(--fg)' }}>Email</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: 13, color: 'var(--fg-2)' }}>{CURRENT_USER.email}</span>
+              <span style={{
+                padding: '4px 10px', borderRadius: 8,
+                background: 'rgba(5,150,105,0.1)', color: 'var(--green)',
+                fontSize: 11, fontWeight: 700,
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+              }}>✓ подтверждён</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '10px 0' }}>
+            <div style={{ fontSize: 14, color: 'var(--fg)' }}>Telegram</div>
+            <button className="btn btn-ghost btn-sm" onClick={() => console.log('TODO connect telegram')}>Подключить →</button>
+          </div>
+        </div>
+
+        <SubHeader style={{ marginTop: 20 }}>Типы уведомлений</SubHeader>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {typeRow('Новые мероприятия в моих организациях', 'newEvents')}
+          {typeRow('Изменения по моим заявкам', 'applicationUpdates')}
+          {typeRow('Напоминания о событиях за день', 'reminders')}
+          {typeRow('Дайджест раз в неделю', 'weeklyDigest')}
+        </div>
       </div>
-      <button className="btn btn-ghost btn-sm" onClick={onAction}>Изменить</button>
+
+      {/* SECTION 3: Приватность */}
+      <div className="card" style={{ padding: 24 }}>
+        <h3 className="h3" style={{ margin: 0, marginBottom: 16 }}>Приватность</h3>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', cursor: 'pointer' }}>
+            <div style={{ fontSize: 14, color: 'var(--fg)' }}>Показывать профиль другим студентам</div>
+            <input
+              type="checkbox"
+              checked={privacy.publicProfile}
+              onChange={(e) => updatePrivacy({ publicProfile: e.target.checked })}
+              style={CHECKBOX_STYLE}
+            />
+          </label>
+          <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '10px 0', cursor: 'pointer' }}>
+            <div style={{ fontSize: 14, color: 'var(--fg)' }}>Показывать email в публичном профиле</div>
+            <input
+              type="checkbox"
+              checked={privacy.emailPublic}
+              onChange={(e) => updatePrivacy({ emailPublic: e.target.checked })}
+              style={CHECKBOX_STYLE}
+            />
+          </label>
+        </div>
+      </div>
+
+      {/* SECTION 4: Аккаунт */}
+      <div className="card" style={{ padding: 24 }}>
+        <h3 className="h3" style={{ margin: 0, marginBottom: 16 }}>Аккаунт</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-start' }}>
+          <button className="btn btn-ghost" onClick={() => console.log('TODO: change password flow')} style={{ width: 240 }}>
+            Сменить пароль
+          </button>
+          <button className="btn btn-ghost" onClick={() => console.log('TODO: logout')} style={{ width: 240 }}>
+            Выйти из аккаунта
+          </button>
+          <button
+            className="btn btn-ghost"
+            onClick={() => console.log('TODO: delete account')}
+            style={{ width: 240, color: 'var(--red)', borderColor: 'var(--red)' }}
+          >
+            Удалить аккаунт
+          </button>
+          <p style={{ fontSize: 12, color: 'var(--fg-4)', marginTop: 4, lineHeight: 1.5 }}>
+            Это действие нельзя отменить. Все твои заявки и членства будут удалены.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

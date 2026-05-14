@@ -300,6 +300,7 @@ export interface CurrentUser {
   joinedAt: string;
   bio?: string;
   phone?: string;
+  emailPublic?: boolean;
 }
 
 export const CURRENT_USER: CurrentUser = {
@@ -316,6 +317,7 @@ export const CURRENT_USER: CurrentUser = {
   joinedAt: '2024-09-01',
   bio: 'Студент ИКИТ. Интересуюсь IT, наукой и студенческой жизнью.',
   phone: '+7 (391) 555-12-34',
+  emailPublic: false,
 };
 
 export type ApplicationStatus = 'pending' | 'auto' | 'rejected' | 'approved';

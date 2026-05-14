@@ -47,6 +47,39 @@ function ProfileContent() {
         </div>
       </div>
 
+      {/* About me block */}
+      <div className="card" style={{ padding: 24, marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
+          <h3 className="h3" style={{ margin: 0 }}>О себе</h3>
+          <span style={{ fontSize: 12, color: 'var(--fg-4)' }}>Видно только тебе · из настроек</span>
+        </div>
+        {CURRENT_USER.bio ? (
+          <p style={{ fontSize: 14, lineHeight: 1.55, color: 'var(--fg-2)', margin: 0, marginBottom: 16 }}>
+            {CURRENT_USER.bio}
+          </p>
+        ) : (
+          <p style={{ fontSize: 13, color: 'var(--fg-4)', fontStyle: 'italic', margin: 0, marginBottom: 16 }}>
+            Расскажи о себе. Нажми «Редактировать» в шапке.
+          </p>
+        )}
+        <div style={{ display: 'flex', gap: 24, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
+          <div>
+            <div style={{ fontSize: 11, color: 'var(--fg-4)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700, marginBottom: 4 }}>
+              Email
+            </div>
+            <div style={{ fontSize: 14, color: 'var(--fg)' }}>{CURRENT_USER.email}</div>
+          </div>
+          {CURRENT_USER.phone && (
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--fg-4)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700, marginBottom: 4 }}>
+                Телефон
+              </div>
+              <div style={{ fontSize: 14, color: 'var(--fg)' }}>{CURRENT_USER.phone}</div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
         {[
@@ -84,7 +117,7 @@ function ProfileContent() {
       {tab === 'Мои заявки'      && <ApplicationsList/>}
       {tab === 'Мои мероприятия' && <MyEventsList/>}
       {tab === 'Интересы'        && <InterestsPanel/>}
-      {tab === 'Настройки'       && <SettingsPanel onChangeInterests={() => setTab('Интересы')}/>}
+      {tab === 'Настройки'       && <SettingsPanel/>}
 
       {editOpen && <ProfileEditModal onClose={() => setEditOpen(false)}/>}
     </div>

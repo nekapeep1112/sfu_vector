@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CURRENT_USER } from '@/lib/mock-data';
 
 interface Props {
@@ -10,17 +10,19 @@ interface Props {
 const BIO_MAX = 200;
 
 export function ProfileEditModal({ onClose }: Props) {
-  const initial = {
-    handle: CURRENT_USER.handle,
-    bio:    CURRENT_USER.bio ?? '',
-    email:  CURRENT_USER.email,
-    phone:  CURRENT_USER.phone ?? '',
-  };
+  const initial = useRef({
+    handle:      CURRENT_USER.handle,
+    bio:         CURRENT_USER.bio ?? '',
+    email:       CURRENT_USER.email,
+    emailPublic: CURRENT_USER.emailPublic ?? false,
+    phone:       CURRENT_USER.phone ?? '',
+  });
 
-  const [handle, setHandle] = useState(initial.handle);
-  const [bio, setBio]       = useState(initial.bio);
-  const [email, setEmail]   = useState(initial.email);
-  const [phone, setPhone]   = useState(initial.phone);
+  const [handle, setHandle]           = useState(initial.current.handle);
+  const [bio, setBio]                 = useState(initial.current.bio);
+  const [email, setEmail]             = useState(initial.current.email);
+  const [emailPublic, setEmailPublic] = useState(initial.current.emailPublic);
+  const [phone, setPhone]             = useState(initial.current.phone);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -33,10 +35,11 @@ export function ProfileEditModal({ onClose }: Props) {
     };
   }, [onClose]);
 
-  const hasChanges = handle !== initial.handle || bio !== initial.bio || email !== initial.email || phone !== initial.phone;
+  const current = { handle, bio, email, emailPublic, phone };
+  const hasChanges = JSON.stringify(current) !== JSON.stringify(initial.current);
 
   const onSave = () => {
-    console.log('TODO: persist profile', { handle, bio, email, phone });
+    console.log('TODO: persist profile', current);
     onClose();
   };
 
@@ -52,7 +55,7 @@ export function ProfileEditModal({ onClose }: Props) {
     >
       <div
         style={{
-          width: '100%', maxWidth: 520, maxHeight: '90vh',
+          width: '100%', maxWidth: 560, maxHeight: '90vh',
           background: 'var(--surface)', borderRadius: 16,
           border: '1px solid var(--border)',
           display: 'flex', flexDirection: 'column',
@@ -74,77 +77,90 @@ export function ProfileEditModal({ onClose }: Props) {
           >×</button>
         </div>
 
-        <div style={{ padding: 24, gap: 20, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div style={{
-              width: 64, height: 64, borderRadius: 18,
-              background: CURRENT_USER.avatarGrad,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 800, fontSize: 22, color: 'white',
-              flexShrink: 0,
-            }}>
-              {CURRENT_USER.initials}
+        <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 28, overflowY: 'auto' }}>
+          <Section title="Публичная информация" hint="Видна другим в будущих обновлениях">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={{
+                width: 64, height: 64, borderRadius: 18,
+                background: CURRENT_USER.avatarGrad,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 800, fontSize: 22, color: 'white',
+                flexShrink: 0,
+              }}>
+                {CURRENT_USER.initials}
+              </div>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={() => console.log('TODO: upload avatar')}
+              >
+                Загрузить фото
+              </button>
             </div>
-            <button
-              className="btn btn-ghost btn-sm"
-              onClick={() => console.log('TODO: upload avatar')}
-            >
-              Загрузить фото
-            </button>
-          </div>
 
-          <Field label="Никнейм" hint="Виден на твоих билетах и в комментариях">
-            <input
-              className="input"
-              value={handle}
-              onChange={(e) => setHandle(e.target.value)}
-              placeholder="ip_2024"
-              style={{ width: '100%', height: 40, fontSize: 14 }}
-            />
-          </Field>
+            <Field label="Никнейм" hint="Виден на твоих билетах. Латиница, цифры, подчёркивание.">
+              <input
+                className="input"
+                value={handle}
+                onChange={(e) => setHandle(e.target.value)}
+                placeholder="ip_2024"
+                style={{ width: '100%', height: 40, fontSize: 14 }}
+              />
+            </Field>
 
-          <Field label="О себе">
-            <textarea
-              value={bio}
-              onChange={(e) => setBio(e.target.value.slice(0, BIO_MAX))}
-              maxLength={BIO_MAX}
-              placeholder="Расскажи о себе…"
-              style={{
-                width: '100%', height: 80, padding: '10px 12px',
-                borderRadius: 10, border: '1px solid var(--border)',
-                background: 'var(--surface)', color: 'var(--fg)',
-                fontSize: 14, fontFamily: 'inherit', resize: 'vertical',
-                boxSizing: 'border-box',
-              }}
-            />
-            <div style={{ fontSize: 11, color: 'var(--fg-4)', textAlign: 'right', marginTop: 4 }}>
-              {bio.length}/{BIO_MAX}
-            </div>
-          </Field>
+            <Field label="О себе">
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value.slice(0, BIO_MAX))}
+                maxLength={BIO_MAX}
+                placeholder="Расскажи о себе…"
+                style={{
+                  width: '100%', height: 80, padding: '10px 12px',
+                  borderRadius: 10, border: '1px solid var(--border)',
+                  background: 'var(--surface)', color: 'var(--fg)',
+                  fontSize: 14, fontFamily: 'inherit', resize: 'vertical',
+                  boxSizing: 'border-box',
+                }}
+              />
+              <div style={{ fontSize: 11, color: 'var(--fg-4)', textAlign: 'right', marginTop: 4 }}>
+                {bio.length}/{BIO_MAX}
+              </div>
+            </Field>
+          </Section>
 
-          <Field label="Email">
-            <input
-              type="email"
-              className="input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ width: '100%', height: 40, fontSize: 14 }}
-            />
-          </Field>
+          <Section title="Контакты" hint="Используются для связи при заявках">
+            <Field label="Email">
+              <input
+                type="email"
+                className="input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{ width: '100%', height: 40, fontSize: 14 }}
+              />
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, fontSize: 13, color: 'var(--fg-2)', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={emailPublic}
+                  onChange={(e) => setEmailPublic(e.target.checked)}
+                  style={{ width: 16, height: 16, cursor: 'pointer', accentColor: 'var(--violet)' }}
+                />
+                Показывать email другим участникам
+              </label>
+            </Field>
 
-          <Field label="Телефон">
-            <input
-              type="tel"
-              className="input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+7 (___) ___-__-__"
-              style={{ width: '100%', height: 40, fontSize: 14 }}
-            />
-          </Field>
+            <Field label="Телефон" hint="🔒 Только для тебя. Используется при подаче заявок.">
+              <input
+                type="tel"
+                className="input"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+7 (___) ___-__-__"
+                style={{ width: '100%', height: 40, fontSize: 14 }}
+              />
+            </Field>
+          </Section>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, padding: '16px 24px', borderTop: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, padding: '16px 24px', borderTop: '1px solid var(--border)' }}>
           <button className="btn btn-ghost" onClick={onClose}>Отменить</button>
           <button
             className="btn btn-primary"
@@ -157,6 +173,18 @@ export function ProfileEditModal({ onClose }: Props) {
         </div>
       </div>
     </div>
+  );
+}
+
+function Section({ title, hint, children }: { title: string; hint: string; children: React.ReactNode }) {
+  return (
+    <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div>
+        <h4 className="h4" style={{ margin: 0, fontWeight: 700 }}>{title}</h4>
+        <div style={{ fontSize: 12, color: 'var(--fg-4)', marginTop: 2 }}>{hint}</div>
+      </div>
+      {children}
+    </section>
   );
 }
 
