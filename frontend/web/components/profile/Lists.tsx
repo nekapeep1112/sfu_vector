@@ -19,8 +19,7 @@ export function NotificationsList() {
   return (
     <div className="col gap-2">
       {items.map((n, i) => (
-        <div key={i} className="card card-hover" style={{ padding: 16, display: 'flex', gap: 14, alignItems: 'flex-start', opacity: n.unread ? 1 : 0.65, position: 'relative' }}>
-          {n.unread && <div style={{ position: 'absolute', left: 8, top: 24, width: 4, height: 4, borderRadius: '50%', background: 'var(--violet)' }}/>}
+        <div key={i} className="card card-hover" style={{ padding: 16, display: 'flex', gap: 14, alignItems: 'flex-start', opacity: n.unread ? 1 : 0.65 }}>
           <div style={{ width: 36, height: 36, borderRadius: 10, background: `${colorOf[n.type]}20`, border: `1px solid ${colorOf[n.type]}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: colorOf[n.type], boxShadow: `0 0 6px ${colorOf[n.type]}` }}/>
           </div>
@@ -38,40 +37,59 @@ export function NotificationsList() {
 }
 
 type AppStatus = 'review' | 'approved' | 'registered' | 'rejected';
+type AppKind = 'event' | 'org';
 
-function appHref(status: AppStatus, eventId: number): string {
+function appHref(kind: AppKind, status: AppStatus, targetId: number): string {
+  if (kind === 'org') return `/dashboard/organizations/${targetId}`;
   switch (status) {
     case 'registered':
     case 'approved':
-      return `/dashboard/events/${eventId}/ticket`;
+      return `/dashboard/events/${targetId}/ticket`;
     case 'review':
-      return `/dashboard/events/${eventId}/register/success`;
+      return `/dashboard/events/${targetId}/register/success`;
     case 'rejected':
-      return `/dashboard/events/${eventId}`;
+      return `/dashboard/events/${targetId}`;
   }
 }
 
+const KIND_CHIP: Record<AppKind, { label: string; color: string; bg: string }> = {
+  event: { label: 'Событие',      color: 'var(--blue)',   bg: 'color-mix(in oklab, var(--blue) 14%, transparent)' },
+  org:   { label: 'Организация',  color: 'var(--violet)', bg: 'color-mix(in oklab, var(--violet) 14%, transparent)' },
+};
+
 export function ApplicationsList() {
-  const apps: { org: string; status: AppStatus; tag: string; date: string; eventId: number }[] = [
-    { org: 'Студенческий медиацентр',  status: 'review',     tag: 'На рассмотрении', date: '12 мая 2026', eventId: 2 },
-    { org: 'Волонтёрский центр СФУ',   status: 'approved',   tag: 'Одобрено',        date: '8 мая 2026',  eventId: 3 },
-    { org: 'Хакатон Siberian Hack 2026', status: 'registered', tag: 'Зарегистрирован', date: '6 мая 2026',  eventId: 1 },
-    { org: 'Клуб робототехники',       status: 'rejected',   tag: 'Отклонено',       date: '2 мая 2026',  eventId: 4 },
+  const apps: { kind: AppKind; org: string; status: AppStatus; tag: string; date: string; targetId: number }[] = [
+    { kind: 'event', org: 'Студенческий медиацентр',     status: 'review',     tag: 'На рассмотрении', date: '12 мая 2026', targetId: 2 },
+    { kind: 'event', org: 'Волонтёрский центр СФУ',       status: 'approved',   tag: 'Одобрено',        date: '8 мая 2026',  targetId: 3 },
+    { kind: 'event', org: 'Хакатон Siberian Hack 2026',  status: 'registered', tag: 'Зарегистрирован', date: '6 мая 2026',  targetId: 1 },
+    { kind: 'event', org: 'Клуб робототехники',           status: 'rejected',   tag: 'Отклонено',       date: '2 мая 2026',  targetId: 4 },
+    { kind: 'org',   org: 'Клуб AI Lab',                  status: 'review',     tag: 'На рассмотрении', date: '14 мая 2026', targetId: 1 },
+    { kind: 'org',   org: 'Студенческий медиацентр',     status: 'approved',   tag: 'Принято',         date: '1 мая 2026',  targetId: 3 },
   ];
   const colors: Record<AppStatus, string> = { review: 'var(--amber)', approved: 'var(--green)', registered: 'var(--blue)', rejected: 'var(--red)' };
   return (
     <div className="col gap-2">
-      {apps.map((a, i) => (
-        <div key={i} className="card card-hover" style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--surface-2)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: 'var(--fg-2)' }}>{a.org.split(' ').slice(0, 2).map(w => w[0]).join('')}</div>
-          <div className="col" style={{ flex: 1 }}>
-            <div style={{ fontSize: 14, fontWeight: 700 }}>{a.org}</div>
-            <div style={{ fontSize: 12, color: 'var(--fg-4)', marginTop: 2 }}>Заявка от {a.date}</div>
+      {apps.map((a, i) => {
+        const chip = KIND_CHIP[a.kind];
+        return (
+          <div key={i} className="card card-hover" style={{ padding: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--surface-2)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: 'var(--fg-2)' }}>{a.org.split(' ').slice(0, 2).map(w => w[0]).join('')}</div>
+            <div className="col" style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{
+                  padding: '2px 8px', borderRadius: 6,
+                  background: chip.bg, color: chip.color,
+                  fontSize: 10, fontWeight: 700, letterSpacing: '0.02em',
+                }}>{chip.label}</span>
+                <div style={{ fontSize: 14, fontWeight: 700 }}>{a.org}</div>
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--fg-4)', marginTop: 4 }}>Заявка от {a.date}</div>
+            </div>
+            <span style={{ padding: '6px 12px', borderRadius: 8, background: `${colors[a.status]}20`, border: `1px solid ${colors[a.status]}40`, color: colors[a.status], fontSize: 12, fontWeight: 600 }}>{a.tag}</span>
+            <Link href={appHref(a.kind, a.status, a.targetId)} className="btn btn-ghost btn-sm">Открыть →</Link>
           </div>
-          <span style={{ padding: '6px 12px', borderRadius: 8, background: `${colors[a.status]}20`, border: `1px solid ${colors[a.status]}40`, color: colors[a.status], fontSize: 12, fontWeight: 600 }}>{a.tag}</span>
-          <Link href={appHref(a.status, a.eventId)} className="btn btn-ghost btn-sm">Открыть →</Link>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

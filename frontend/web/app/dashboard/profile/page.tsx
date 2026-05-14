@@ -1,8 +1,10 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { CURRENT_USER } from '@/lib/mock-data';
 import { NotificationsList, ApplicationsList, MyEventsList, SettingsPanel, InterestsPanel } from '@/components/profile/Lists';
+import { ProfileEditModal } from '@/components/profile/ProfileEditModal';
 
 const TABS = ['Уведомления', 'Мои заявки', 'Мои мероприятия', 'Интересы', 'Настройки'] as const;
 type TabName = typeof TABS[number];
@@ -19,12 +21,18 @@ function ProfileContent() {
   const searchParams = useSearchParams();
   const initialTab: TabName = searchParams.get('tab') === 'interests' ? 'Интересы' : 'Уведомления';
   const [tab, setTab] = useState<TabName>(initialTab);
+  const [editOpen, setEditOpen] = useState(false);
+  const [daysOnPlatform, setDaysOnPlatform] = useState(0);
+
+  useEffect(() => {
+    setDaysOnPlatform(Math.floor((Date.now() - new Date(CURRENT_USER.joinedAt).getTime()) / 86400000));
+  }, []);
 
   return (
     <div style={{ maxWidth: 1240, margin: '0 auto', padding: 32 }}>
       {/* Profile header */}
       <div className="card" style={{ padding: 32, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 24, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'var(--grad)', opacity: 0.1, filter: 'blur(40px)' }}/>
+        <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'var(--grad)', opacity: 0.1, filter: 'blur(40px)', pointerEvents: 'none' }}/>
         <div style={{ width: 88, height: 88, borderRadius: 22, background: 'linear-gradient(135deg, #F5A524, #F25E5E)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 28, color: 'white', flexShrink: 0 }}>ИП</div>
         <div className="col" style={{ flex: 1 }}>
           <h2 className="h2" style={{ margin: 0 }}>Иван Петров</h2>
@@ -35,18 +43,17 @@ function ProfileContent() {
           </div>
         </div>
         <div className="row gap-2">
-          <button className="btn btn-ghost btn-sm">Редактировать</button>
-          <button className="btn btn-primary btn-sm">+ Подать заявку</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setEditOpen(true)}>Редактировать</button>
         </div>
       </div>
 
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
         {[
-          { v: 12, l: 'мероприятий посещено', c: 'var(--blue)' },
-          { v: 3, l: 'организации', c: 'var(--violet)' },
-          { v: 5, l: 'активные заявки', c: 'var(--amber)' },
-          { v: 248, l: 'часов активности', c: 'var(--green)' },
+          { v: 12,              l: 'мероприятий посещено', c: 'var(--blue)' },
+          { v: daysOnPlatform,  l: 'дней на платформе',    c: 'var(--violet)' },
+          { v: 5,               l: 'активные заявки',      c: 'var(--amber)' },
+          { v: 248,             l: 'часов активности',     c: 'var(--green)' },
         ].map((s, i) => (
           <div key={i} className="card" style={{ padding: 20 }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.c, marginBottom: 12, boxShadow: `0 0 8px ${s.c}` }}/>
@@ -78,6 +85,8 @@ function ProfileContent() {
       {tab === 'Мои мероприятия' && <MyEventsList/>}
       {tab === 'Интересы'        && <InterestsPanel/>}
       {tab === 'Настройки'       && <SettingsPanel onChangeInterests={() => setTab('Интересы')}/>}
+
+      {editOpen && <ProfileEditModal onClose={() => setEditOpen(false)}/>}
     </div>
   );
 }

@@ -43,7 +43,7 @@ export default function HomePage() {
             С возвращением, {CURRENT_USER.name.split(' ')[0]} 👋
           </h1>
           <p data-hero-text-light-2 style={{ fontSize: 17, color: 'var(--fg-2)', maxWidth: 520, lineHeight: 1.55, margin: 0, marginBottom: 32 }}>
-            6 ближайших событий в афише и 2 заявки в обработке. Хорошего дня в&nbsp;кампусе.
+            6 ближайших событий в афише и 2 заявки в обработке. Хорошего дня.
           </p>
           <div className="row gap-3">
             <Link href="/dashboard/events" className="btn btn-primary" style={{ padding: '14px 22px', fontSize: 15, textDecoration: 'none' }}>
@@ -73,17 +73,16 @@ export default function HomePage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             {EVENTS.slice(0, 3).map(e => (
-              <div key={e.id} className="card card-hover" style={{ padding: 0, overflow: 'hidden', cursor: 'pointer' }}>
+              <Link key={e.id} href={`/dashboard/events/${e.id}`} className="card card-hover" style={{ padding: 0, overflow: 'hidden', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
                 <EventCover event={e} height={140}/>
                 <div style={{ padding: 16 }}>
-                  <div className="row" style={{ justifyContent: 'space-between', fontSize: 12, color: 'var(--fg-3)', marginBottom: 8 }}>
-                    <span>{e.date.d} {e.date.m} · {e.time}</span>
-                    <span style={{ color: 'var(--violet)' }}>92% совпадение</span>
+                  <div style={{ fontSize: 12, color: 'var(--fg-3)', marginBottom: 8 }}>
+                    {e.date.d} {e.date.m} · {e.time}
                   </div>
                   <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.3, marginBottom: 10 }}>{e.title}</div>
                   <CapacityBar registered={e.registered} capacity={e.capacity} color={EVENT_TYPES[e.type].color}/>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>
@@ -100,6 +99,7 @@ export default function HomePage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           <EntryCard
             num="01"
+            href="/dashboard/orgs?tab=map"
             title="Найди свой институт"
             desc="Колесо из 20 институтов — кликни и узнай, кто там, чем занимаются и как присоединиться."
             cta="К карте институтов"
@@ -107,6 +107,7 @@ export default function HomePage() {
           />
           <EntryCard
             num="02"
+            href="/dashboard/events"
             title="Открой мероприятия"
             desc="Хакатоны, фестивали, лекции, спорт. Фильтры по типу, формату и интересам."
             cta="Все мероприятия"
@@ -114,6 +115,7 @@ export default function HomePage() {
           />
           <EntryCard
             num="03"
+            href="/dashboard/orgs"
             title="Вступи в организацию"
             desc="50+ студенческих сообществ. Кто-то ищет именно тебя прямо сейчас."
             cta="Идёт набор · 12"
@@ -125,25 +127,16 @@ export default function HomePage() {
 
       {/* ЧТО ПРОИСХОДИТ СЕЙЧАС */}
       <section style={{ marginTop: 48 }}>
-        <div className="row" style={{ justifyContent: 'space-between', marginBottom: 20 }}>
-          <div>
-            <h2 className="h3" style={{ margin: 0 }}>Что происходит сейчас</h2>
-            <p style={{ fontSize: 13, color: 'var(--fg-3)', margin: '4px 0 0' }}>Ближайшие 14 дней · {EVENTS.length} событий</p>
-          </div>
-          <div className="row gap-2">
-            <button className="btn btn-ghost btn-sm" style={{ width: 36, height: 36, padding: 0, justifyContent: 'center' }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <button className="btn btn-ghost btn-sm" style={{ width: 36, height: 36, padding: 0, justifyContent: 'center' }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-            <a href="#" style={{ fontSize: 13, color: 'var(--violet)', fontWeight: 500, marginLeft: 8 }}>Все →</a>
-          </div>
+        <div style={{ marginBottom: 20 }}>
+          <h2 className="h3" style={{ margin: 0 }}>Что происходит сейчас</h2>
+          <p style={{ fontSize: 13, color: 'var(--fg-3)', margin: '4px 0 0' }}>Ближайшие 14 дней · {EVENTS.length} событий</p>
         </div>
 
         <div style={{ display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 12, scrollSnapType: 'x mandatory' }}>
           {EVENTS.map(e => (
-            <CompactEventCard key={e.id} event={e}/>
+            <Link key={e.id} href={`/dashboard/events/${e.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <CompactEventCard event={e}/>
+            </Link>
           ))}
         </div>
       </section>

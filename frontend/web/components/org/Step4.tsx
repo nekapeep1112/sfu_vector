@@ -65,6 +65,14 @@ const FORMAT_LABELS: Record<NonNullable<WizardData['format']>, string> = {
   'hybrid': 'Гибрид',
 };
 
+function pluralQuestions(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'вопрос';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'вопроса';
+  return 'вопросов';
+}
+
 export function Step4({
   data,
   onPublish,
@@ -152,6 +160,17 @@ export function Step4({
             {data.capacity != null && ` · ${data.capacity} мест`}
             {data.hours != null && ` · ${data.hours} ч активности`}
           </div>
+          {data.regMode === 'application' && (
+            <div style={{ fontSize: 12, marginTop: 4 }}>
+              {data.applicationQuestions.length === 0 ? (
+                <span style={{ color: 'var(--amber)' }}>⚠ Анкета не настроена</span>
+              ) : (
+                <span style={{ color: 'var(--fg-3)' }}>
+                  Анкета: {data.applicationQuestions.length} {pluralQuestions(data.applicationQuestions.length)}
+                </span>
+              )}
+            </div>
+          )}
         </SummaryRow>
 
         <SummaryRow label="Видимость">

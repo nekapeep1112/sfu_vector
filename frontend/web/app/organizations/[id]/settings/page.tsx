@@ -1,9 +1,10 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import { notFound } from 'next/navigation';
-import { ORGANIZATIONS, tonalShift } from '@/lib/mock-data';
+import { ORGANIZATIONS, tonalShift, type ApplicationQuestion } from '@/lib/mock-data';
 import { IconCheck } from '@/components/org/icons';
+import { FormBuilder } from '@/components/forms/FormBuilder';
 
 function OrgSettingRow({
   label, value, action, onAction, danger = false, isLast = false,
@@ -40,6 +41,15 @@ export default function OrgSettingsPage({ params }: { params: Promise<{ id: stri
   const id = Number(idParam);
   const org = ORGANIZATIONS.find((o) => o.id === id);
   if (!org) notFound();
+
+  const initialQuestions = org.joinQuestions;
+  const [joinQuestions, setJoinQuestions] = useState<ApplicationQuestion[]>(initialQuestions);
+  const hasChanges = JSON.stringify(joinQuestions) !== JSON.stringify(initialQuestions);
+
+  const handleSave = () => {
+    console.log('TODO: save join questions', { orgId: id, joinQuestions });
+  };
+  const handleReset = () => setJoinQuestions(initialQuestions);
 
   return (
     <div style={{ maxWidth: 1240, margin: '0 auto', padding: 32 }}>
@@ -83,7 +93,39 @@ export default function OrgSettingsPage({ params }: { params: Promise<{ id: stri
           />
         </div>
 
-        {/* Section 2: Верификация */}
+        {/* Section 2: Анкета вступления */}
+        <div className="card" style={{ padding: 24 }}>
+          <h3 className="h3" style={{ margin: '0 0 6px' }}>Анкета вступления</h3>
+          <p style={{ fontSize: 13, color: 'var(--fg-3)', marginTop: 0, marginBottom: 20, lineHeight: 1.55 }}>
+            Эти вопросы увидит студент при подаче заявки на вступление в организацию. Можно изменить состав и порядок в любой момент.
+          </p>
+
+          <FormBuilder
+            questions={joinQuestions}
+            onChange={setJoinQuestions}
+            emptyHint="Добавь хотя бы один вопрос — без анкеты пользователь не сможет подать заявку."
+          />
+
+          <div style={{
+            display: 'flex', justifyContent: 'flex-end', gap: 12,
+            marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)',
+          }}>
+            <button
+              className="btn btn-ghost"
+              onClick={handleReset}
+              disabled={!hasChanges}
+              style={{ opacity: hasChanges ? 1 : 0.5 }}
+            >Сбросить</button>
+            <button
+              className="btn btn-primary"
+              onClick={handleSave}
+              disabled={!hasChanges}
+              style={{ opacity: hasChanges ? 1 : 0.5 }}
+            >Сохранить</button>
+          </div>
+        </div>
+
+        {/* Section 3: Верификация */}
         <div className="card" style={{ padding: 24 }}>
           <h4 className="h4" style={{ margin: '0 0 16px' }}>Верификация</h4>
           <div style={{
@@ -107,7 +149,7 @@ export default function OrgSettingsPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
-        {/* Section 3: Опасная зона */}
+        {/* Section 4: Опасная зона */}
         <div className="card" style={{ padding: 24, borderColor: 'rgba(242,94,94,0.3)' }}>
           <h4 className="h4" style={{ margin: '0 0 16px', color: 'var(--red)' }}>Опасная зона</h4>
           <OrgSettingRow

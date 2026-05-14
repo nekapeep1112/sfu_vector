@@ -2,6 +2,7 @@
 
 import { FieldBlock, FieldLabel } from '@/components/org/WizardField';
 import { CapacitySlider } from '@/components/org/CapacitySlider';
+import { FormBuilder } from '@/components/forms/FormBuilder';
 import type { WizardData } from '@/components/org/wizard-types';
 
 const Cw = {
@@ -142,7 +143,7 @@ export function Step3({ data, onChange }: { data: WizardData; onChange: (patch: 
         </div>
       </FieldBlock>
 
-      {/* Form questions hint */}
+      {/* Form questions area */}
       {regOpen && (
         <FieldBlock>
           <div style={{
@@ -155,6 +156,15 @@ export function Step3({ data, onChange }: { data: WizardData; onChange: (patch: 
             <Cw.lock s={14}/>
             Вопросы анкеты доступны при выборе варианта «С анкетой / по заявке».
           </div>
+        </FieldBlock>
+      )}
+      {data.regMode === 'application' && (
+        <FieldBlock>
+          <FormBuilder
+            questions={data.applicationQuestions}
+            onChange={(qs) => onChange({ applicationQuestions: qs })}
+            emptyHint="Добавь первый вопрос анкеты."
+          />
         </FieldBlock>
       )}
 

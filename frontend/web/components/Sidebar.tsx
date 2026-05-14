@@ -2,8 +2,8 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 import { LogoMark } from './Logo';
-import { NotificationsBell } from './NotificationsBell';
 import { ContextSwitcher, type SidebarContext } from './org/ContextSwitcher';
 
 type PersonalItemId = 'home' | 'orgs' | 'events' | 'profile';
@@ -71,7 +71,7 @@ function getNavItems(context: SidebarContext, loggedIn: boolean): NavItem[] {
     { id: 'home',    label: 'Главная',     icon: IconHome },
     { id: 'orgs',    label: 'Организации', icon: IconOrgs },
     { id: 'events',  label: 'Мероприятия', icon: IconEvents },
-    { id: 'profile', label: 'Профиль',     icon: IconProfile, badge: loggedIn ? 3 : null },
+    { id: 'profile', label: 'Профиль',     icon: IconProfile, badge: 3 },
   ];
 }
 
@@ -94,16 +94,17 @@ export function Sidebar({ loggedIn = false, compact = false, context = { type: '
       height: '100vh',
     }}>
       {compact ? (
-        <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8, borderBottom: '1px solid var(--border)', marginBottom: 4 }}>
+        <Link href="/" aria-label="На главную" style={{ display: 'flex', justifyContent: 'center', paddingBottom: 8, borderBottom: '1px solid var(--border)', marginBottom: 4, textDecoration: 'none' }}>
           <LogoMark px={36}/>
-        </div>
+        </Link>
       ) : (
         <>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 4px 8px' }}>
-            <LogoMark px={22}/>
-            <span style={{ fontSize: 10, color: 'var(--fg-4)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', flex: 1 }}>СФУ·Вектор</span>
-            <NotificationsBell/>
-          </div>
+          <Link href="/" aria-label="На главную" style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '4px 4px 12px', textDecoration: 'none', color: 'inherit' }}>
+            <LogoMark px={32}/>
+            <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.01em', color: 'var(--fg)', lineHeight: 1 }}>
+              СФУ<span className="text-grad">.Вектор</span>
+            </div>
+          </Link>
           <ContextSwitcher context={context}/>
         </>
       )}

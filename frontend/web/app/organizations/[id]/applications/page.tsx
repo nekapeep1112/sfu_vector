@@ -1,13 +1,15 @@
 'use client';
 
 import { use, useMemo, useState } from 'react';
-import { useRouter, notFound } from 'next/navigation';
-import { ORGANIZATIONS, APPLICATIONS } from '@/lib/mock-data';
+import { useRouter, useSearchParams, notFound } from 'next/navigation';
+import { ORGANIZATIONS, APPLICATIONS, MEMBERSHIP_APPLICATIONS } from '@/lib/mock-data';
 import { ApplicationsFilters } from '@/components/org/ApplicationsFilters';
 import { ApplicationsList } from '@/components/org/ApplicationsList';
 import { ApplicationDetail } from '@/components/org/ApplicationDetail';
 import { ApplicationsEmpty } from '@/components/org/ApplicationsEmpty';
 import { BulkActionsBar } from '@/components/org/BulkActionsBar';
+import { MembershipApplicationsList } from '@/components/org/MembershipApplicationsList';
+import { MembershipApplicationDetail } from '@/components/org/MembershipApplicationDetail';
 import type { TabId, Counts } from '@/components/org/applications-types';
 
 const IconDownload = ({ s = 14 }: { s?: number }) => (
@@ -25,6 +27,8 @@ const IconSettings = ({ s = 14 }: { s?: number }) => (
   </svg>
 );
 
+type AppType = 'events' | 'team';
+
 export default function ApplicationsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: idParam } = use(params);
   const id = Number(idParam);
@@ -32,6 +36,80 @@ export default function ApplicationsPage({ params }: { params: Promise<{ id: str
   if (!org) notFound();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialType: AppType = searchParams.get('type') === 'team' ? 'team' : 'events';
+  const [appType, setAppType] = useState<AppType>(initialType);
+
+  const orgMembershipApps = useMemo(
+    () => MEMBERSHIP_APPLICATIONS.filter(a => a.orgId === id),
+    [id]
+  );
+
+  return (
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: 32 }}>
+      <PageHeader appType={appType} eventsCount={APPLICATIONS.length} teamCount={orgMembershipApps.length}/>
+
+      <TypeToggle
+        appType={appType}
+        eventsCount={APPLICATIONS.length}
+        teamCount={orgMembershipApps.length}
+        onChange={setAppType}
+      />
+
+      {appType === 'events' ? (
+        <EventsApplicationsPane orgId={id} router={router}/>
+      ) : (
+        <MembershipApplicationsPane applications={orgMembershipApps}/>
+      )}
+    </div>
+  );
+}
+
+function TypeToggle({
+  appType, eventsCount, teamCount, onChange,
+}: {
+  appType: AppType;
+  eventsCount: number;
+  teamCount: number;
+  onChange: (t: AppType) => void;
+}) {
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+      {([
+        { id: 'events', label: 'На события', count: eventsCount },
+        { id: 'team',   label: 'В команду',  count: teamCount },
+      ] as const).map(t => {
+        const active = appType === t.id;
+        return (
+          <button
+            key={t.id}
+            onClick={() => onChange(t.id)}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 18px', borderRadius: 10,
+              fontSize: 14, fontWeight: 700,
+              background: active ? 'var(--surface)' : 'transparent',
+              border: '1px solid ' + (active ? 'var(--border-strong)' : 'var(--border)'),
+              color: active ? 'var(--fg)' : 'var(--fg-3)',
+              cursor: 'pointer',
+              transition: 'all .15s',
+            }}
+          >
+            {t.label}
+            <span style={{
+              padding: '2px 8px', borderRadius: 999,
+              background: active ? 'var(--bg-2)' : 'var(--surface)',
+              border: '1px solid ' + (active ? 'var(--border)' : 'var(--border)'),
+              fontSize: 11, fontWeight: 700, color: active ? 'var(--fg-2)' : 'var(--fg-4)',
+            }}>{t.count}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function EventsApplicationsPane({ orgId, router }: { orgId: number; router: ReturnType<typeof useRouter> }) {
   const [activeTab, setActiveTab] = useState<TabId>('pending');
   const [selectedId, setSelectedId] = useState<number>(APPLICATIONS[0].id);
   const [bulkMode, setBulkMode] = useState(false);
@@ -66,30 +144,26 @@ export default function ApplicationsPage({ params }: { params: Promise<{ id: str
     setBulkChecked(allChecked ? [] : Array.from(new Set([...bulkChecked, ...ids])));
   };
 
-  const onToggleBulk = () => {
-    if (bulkMode) setBulkChecked([]);
-    setBulkMode((b) => !b);
-  };
-
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: 32 }}>
-      <PageHeader
-        counts={counts}
-        bulkMode={bulkMode}
-        onToggleBulk={onToggleBulk}
-        onExport={() => console.log('TODO: export csv')}
-        onNotificationSettings={() => console.log('TODO: notification settings')}
-      />
+    <>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12, gap: 8 }}>
+        <button
+          onClick={() => {
+            if (bulkMode) setBulkChecked([]);
+            setBulkMode((b) => !b);
+          }}
+          className={bulkMode ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
+        >
+          {bulkMode ? 'Выйти из массового режима' : 'Массовый режим'}
+        </button>
+      </div>
 
       <ApplicationsFilters activeTab={activeTab} onTabChange={setActiveTab} counts={counts}/>
 
-      {/* NOTE: empty-state срабатывает когда в выбранном табе нет заявок.
-          С текущим набором APPLICATIONS все 4 таба содержат данные → empty не показывается.
-          Для ручной проверки: временно меняй activeTab на несуществующий или фильтр на жёсткий. */}
       {filtered.length === 0 ? (
         <ApplicationsEmpty
           onViewApproved={() => setActiveTab('approved')}
-          onCreateEvent={() => router.push(`/organizations/${id}/events/new`)}
+          onCreateEvent={() => router.push(`/organizations/${orgId}/events/new`)}
         />
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 480px', gap: 16, alignItems: 'flex-start' }}>
@@ -126,39 +200,62 @@ export default function ApplicationsPage({ params }: { params: Promise<{ id: str
           />
         </div>
       )}
+    </>
+  );
+}
+
+function MembershipApplicationsPane({ applications }: { applications: typeof MEMBERSHIP_APPLICATIONS }) {
+  const [selectedId, setSelectedId] = useState<number>(applications[0]?.id ?? 0);
+
+  if (applications.length === 0) {
+    return (
+      <div className="card" style={{ padding: 48, textAlign: 'center', color: 'var(--fg-3)' }}>
+        <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color: 'var(--fg-2)' }}>Нет заявок в команду</div>
+        <div style={{ fontSize: 13 }}>Когда студенты подадут заявки на вступление, они появятся здесь.</div>
+      </div>
+    );
+  }
+
+  const selected = applications.find(a => a.id === selectedId) ?? applications[0];
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 480px', gap: 16, alignItems: 'flex-start' }}>
+      <MembershipApplicationsList
+        applications={applications}
+        selectedId={selected.id}
+        onSelect={setSelectedId}
+      />
+      <MembershipApplicationDetail
+        application={selected}
+        onApprove={(role) => console.log('TODO: approve membership as', role, selected.id)}
+        onReject={() => console.log('TODO: reject membership', selected.id)}
+      />
     </div>
   );
 }
 
 function PageHeader({
-  counts, bulkMode, onToggleBulk, onExport, onNotificationSettings,
+  appType, eventsCount, teamCount,
 }: {
-  counts: Counts;
-  bulkMode: boolean;
-  onToggleBulk: () => void;
-  onExport: () => void;
-  onNotificationSettings: () => void;
+  appType: AppType;
+  eventsCount: number;
+  teamCount: number;
 }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, gap: 16 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, gap: 16 }}>
       <div>
         <h2 className="h2" style={{ margin: 0 }}>Заявки</h2>
         <div style={{ fontSize: 13, color: 'var(--fg-3)', marginTop: 4 }}>
-          {counts.pending} ждут рассмотрения · {counts.approved} одобрено · {counts.rejected} отклонено
+          {appType === 'events'
+            ? `${eventsCount} всего · на участие в мероприятиях`
+            : `${teamCount} всего · на вступление в команду`}
         </div>
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
-        <button
-          onClick={onToggleBulk}
-          className={bulkMode ? 'btn btn-primary btn-sm' : 'btn btn-ghost btn-sm'}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
-        >
-          {bulkMode ? 'Выйти из массового режима' : 'Массовый режим'}
-        </button>
-        <button className="btn btn-ghost btn-sm" onClick={onExport} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <button className="btn btn-ghost btn-sm" onClick={() => console.log('TODO: export csv')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <IconDownload/> Экспорт CSV
         </button>
-        <button className="btn btn-ghost btn-sm" onClick={onNotificationSettings} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <button className="btn btn-ghost btn-sm" onClick={() => console.log('TODO: notification settings')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <IconSettings/> Настройки уведомлений
         </button>
       </div>

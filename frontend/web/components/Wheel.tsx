@@ -9,6 +9,8 @@ type WheelProps = {
   setSelected: (v: string) => void;
 };
 
+const f = (n: number) => n.toFixed(3);
+
 export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps) {
   const N = INSTITUTES.length;
   const cx = 0, cy = 0;
@@ -26,7 +28,7 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
     const x1o = cx + rOuter * Math.cos(a1), y1o = cy + rOuter * Math.sin(a1);
     const x0i = cx + rInner * Math.cos(a0), y0i = cy + rInner * Math.sin(a0);
     const x1i = cx + rInner * Math.cos(a1), y1i = cy + rInner * Math.sin(a1);
-    const path = `M ${x0o} ${y0o} A ${rOuter} ${rOuter} 0 0 1 ${x1o} ${y1o} L ${x1i} ${y1i} A ${rInner} ${rInner} 0 0 0 ${x0i} ${y0i} Z`;
+    const path = `M ${f(x0o)} ${f(y0o)} A ${rOuter} ${rOuter} 0 0 1 ${f(x1o)} ${f(y1o)} L ${f(x1i)} ${f(y1i)} A ${rInner} ${rInner} 0 0 0 ${f(x0i)} ${f(y0i)} Z`;
 
     const aMidDeg = (aMid * 180) / Math.PI;
     const flip = aMidDeg > 0 && aMidDeg < 180;
@@ -36,13 +38,9 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
     const tx0 = cx + labelR * Math.cos(ta0), ty0 = cy + labelR * Math.sin(ta0);
     const tx1 = cx + labelR * Math.cos(ta1), ty1 = cy + labelR * Math.sin(ta1);
     const sweepFlag = flip ? 0 : 1;
-    const textPath = `M ${tx0} ${ty0} A ${labelR} ${labelR} 0 0 ${sweepFlag} ${tx1} ${ty1}`;
+    const textPath = `M ${f(tx0)} ${f(ty0)} A ${labelR} ${labelR} 0 0 ${sweepFlag} ${f(tx1)} ${f(ty1)}`;
 
-    const dotR = rOuter + 18;
-    const dx = cx + dotR * Math.cos(aMid);
-    const dy = cy + dotR * Math.sin(aMid);
-
-    return { ...inst, path, textPath, aMid, dx, dy, idx: i, flip };
+    return { ...inst, path, textPath, aMid, idx: i, flip };
   });
 
   return (
@@ -88,17 +86,6 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
                   {s.abbr}
                 </textPath>
               </text>
-              {s.recruiting && (
-                <g style={{ pointerEvents: 'none' }}>
-                  <circle cx={s.dx} cy={s.dy} r="4" fill="var(--violet)">
-                    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
-                  </circle>
-                  <circle cx={s.dx} cy={s.dy} r="8" fill="none" stroke="var(--violet)" strokeWidth="1" opacity="0.4">
-                    <animate attributeName="r" values="4;12;4" dur="2s" repeatCount="indefinite"/>
-                    <animate attributeName="opacity" values="0.5;0;0.5" dur="2s" repeatCount="indefinite"/>
-                  </circle>
-                </g>
-              )}
             </g>
           );
         })}
@@ -119,7 +106,7 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
                 <path d={hexPath} fill="none" stroke="url(#center-grad)" strokeWidth="2" strokeLinejoin="round"/>
                 <path d="M -8 -12 L 10 0 L -8 12 L -3 0 Z" fill="url(#center-grad)"/>
                 {verts.map((p, i) => (
-                  <circle key={i} cx={p.x} cy={p.y} r="3.8" fill="var(--blue)" stroke="#FFFFFF" strokeWidth="1.2"/>
+                  <circle key={i} cx={Number(f(p.x))} cy={Number(f(p.y))} r="3.8" fill="var(--blue)" stroke="#FFFFFF" strokeWidth="1.2"/>
                 ))}
               </g>
             );
@@ -131,32 +118,6 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
         </text>
       </svg>
 
-      {hovered && (() => {
-        const inst = INSTITUTES.find(i => i.abbr === hovered);
-        const sector = sectors.find(s => s.abbr === hovered);
-        if (!inst || !sector) return null;
-        const half = SVG / 2;
-        const lx = labelR * Math.cos(sector.aMid);
-        const ly = labelR * Math.sin(sector.aMid);
-        const tx = half + lx;
-        const ty = half + ly;
-        return (
-          <div style={{
-            position: 'absolute', left: tx, top: ty,
-            transform: 'translate(-50%, -130%)',
-            background: 'var(--surface-2)',
-            border: '1px solid var(--border-strong)',
-            borderRadius: 10, padding: '10px 14px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(155,92,255,0.2)',
-            pointerEvents: 'none', zIndex: 10,
-            maxWidth: 280,
-          }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 2 }}>{inst.abbr}</div>
-            <div style={{ fontSize: 11, color: 'var(--fg-3)', lineHeight: 1.4 }}>{inst.name}</div>
-            {inst.recruiting && <div style={{ fontSize: 10, color: 'var(--violet)', marginTop: 6, fontWeight: 600 }}>● Идёт набор</div>}
-          </div>
-        );
-      })()}
     </div>
   );
 }

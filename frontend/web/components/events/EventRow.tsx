@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { EVENT_TYPES, type EventItem } from '@/lib/mock-data';
-import { EventCover, CapacityBar, AvatarStack } from '../EventCover';
+import { EventCover, CapacityBar } from '../EventCover';
 
 interface EventRowProps {
   event: EventItem;
@@ -16,14 +16,14 @@ export function EventRow({ event, isFavorite = false, onToggleFavorite }: EventR
     <Link href={href} className="card card-hover" style={{
       padding: 16,
       display: 'grid',
-      gridTemplateColumns: '180px minmax(0, 1fr) 220px',
+      gridTemplateColumns: '280px minmax(0, 1fr) 220px',
       gap: 20,
       alignItems: 'stretch',
       textDecoration: 'none',
       color: 'inherit',
     }}>
-      <div style={{ position: 'relative', height: 140 }}>
-        <EventCover event={event} height={140}/>
+      <div style={{ position: 'relative', height: 160 }}>
+        <EventCover event={event} height={160}/>
         <div style={{
           position: 'absolute', top: 10, left: 10,
           background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)',
@@ -91,10 +91,7 @@ export function EventRow({ event, isFavorite = false, onToggleFavorite }: EventR
       </div>
 
       <div className="col" style={{ gap: 12, justifyContent: 'space-between', minWidth: 0 }}>
-        <div className="col gap-3">
-          <CapacityBar registered={event.registered} capacity={event.capacity} color={t.color}/>
-          <AvatarStack count={event.registered}/>
-        </div>
+        <CapacityBar registered={event.registered} capacity={event.capacity} color={t.color}/>
         <span className="btn btn-primary btn-sm" style={{ justifyContent: 'center', height: 36, width: '100%' }}>Участвовать</span>
       </div>
     </Link>

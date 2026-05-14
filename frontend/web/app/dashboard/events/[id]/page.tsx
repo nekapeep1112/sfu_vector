@@ -69,12 +69,14 @@ export default async function EventDetailPage(
 
           <Section title="Организаторы">
             <div style={{ display: 'flex', gap: 16 }}>
+              {/* DEMO: orgId=1 (Студсовет ИКИТ) как заглушка — у EventItem пока нет связи abbr → orgId. Технический долг. */}
               <OrganizerCard
                 abbr="ИКИТ"
                 label="ИКИТ"
                 color={ikitColor}
                 eventsCount={247}
                 participants="1.2k"
+                orgId={1}
               />
               <OrganizerCard
                 abbr="ПС"
@@ -82,6 +84,7 @@ export default async function EventDetailPage(
                 color="#9B5CFF"
                 eventsCount={189}
                 participants="3.4k"
+                orgId={1}
               />
             </div>
           </Section>

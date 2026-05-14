@@ -1,7 +1,8 @@
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 export function EntryCard({
-  num, title, desc, cta, ctaAccent, preview,
+  num, title, desc, cta, ctaAccent, preview, href,
 }: {
   num: string;
   title: string;
@@ -9,9 +10,10 @@ export function EntryCard({
   cta: string;
   ctaAccent?: boolean;
   preview: ReactNode;
+  href: string;
 }) {
   return (
-    <div className="card card-hover" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', cursor: 'pointer' }}>
+    <Link href={href} className="card card-hover" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
       <div style={{ height: 180, position: 'relative', borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
         {preview}
       </div>
@@ -24,6 +26,6 @@ export function EntryCard({
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { tonalShift } from '@/lib/mock-data';
 
 const IcCheck = ({ s = 14 }: { s?: number }) => (
@@ -11,19 +12,25 @@ const IcArrow = ({ s = 14 }: { s?: number }) => (
 );
 
 export function OrganizerCard({
-  abbr, label, color, eventsCount, participants,
+  abbr, label, color, eventsCount, participants, orgId,
 }: {
   abbr: string;
   label: string;
   color: string;
   eventsCount: number;
   participants: string;
+  orgId?: number;
 }) {
+  const router = useRouter();
   const initials = abbr.slice(0, 2);
+  const onClick = () => {
+    if (orgId) router.push(`/dashboard/organizations/${orgId}`);
+    else console.log('TODO: org profile (no orgId mapping)', abbr);
+  };
   return (
     <div
       className="card card-hover"
-      onClick={() => console.log('TODO: org profile')}
+      onClick={onClick}
       style={{ padding: 20, flex: 1, cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 14 }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

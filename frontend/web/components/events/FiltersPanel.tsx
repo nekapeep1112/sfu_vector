@@ -25,7 +25,7 @@ const PRICE_ITEMS: FilterItem[] = [
 ];
 
 export function FiltersPanel() {
-  const [active, setActive] = useState<Set<string>>(() => new Set(['hack', 'offline', 'online', 'free']));
+  const [active, setActive] = useState<Set<string>>(() => new Set());
 
   const toggle = (id: string) => {
     setActive((prev) => {

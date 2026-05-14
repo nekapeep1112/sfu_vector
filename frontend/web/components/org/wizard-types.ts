@@ -1,4 +1,4 @@
-import type { EventType } from '@/lib/mock-data';
+import type { ApplicationQuestion, EventType } from '@/lib/mock-data';
 
 export type WizardCover =
   | { type: 'generated' }
@@ -25,6 +25,7 @@ export interface WizardData {
   notifyOnRegister: boolean;
   qrTicket: boolean;
   allowCancel: boolean;
+  applicationQuestions: ApplicationQuestion[];
 }
 
 export const INITIAL_WIZARD_DATA: WizardData = {
@@ -48,4 +49,5 @@ export const INITIAL_WIZARD_DATA: WizardData = {
   notifyOnRegister: true,
   qrTicket: true,
   allowCancel: true,
+  applicationQuestions: [],
 };

@@ -1,9 +1,9 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import { EventCover } from '@/components/EventCover';
 import type { Application, EventItem } from '@/lib/mock-data';
 import { Avatar, StatusChip } from '@/components/org/ApplicationsList';
+import { DynamicAnswers } from '@/components/forms/DynamicAnswers';
 
 const Ap = {
   check: (p: { s?: number } = {}) => (
@@ -27,20 +27,6 @@ const Ap = {
     </svg>
   ),
 };
-
-function AnswerBlock({ q, a, link }: { q: string; a: ReactNode; link?: boolean }) {
-  return (
-    <div>
-      <div style={{ fontSize: 11, color: 'var(--fg-4)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{q}</div>
-      <div style={{
-        fontSize: 14, color: link ? 'var(--blue)' : 'var(--fg)',
-        marginTop: 6, lineHeight: 1.5,
-        cursor: link ? 'pointer' : 'default',
-        fontWeight: link ? 600 : 400,
-      }}>{a}</div>
-    </div>
-  );
-}
 
 function StatTile({ value, label }: { value: string; label: string }) {
   return (
@@ -115,12 +101,7 @@ export function ApplicationDetail({
       </div>
 
       <h4 style={{ margin: '0 0 14px 0', fontSize: 15, fontWeight: 700, color: 'var(--fg)' }}>Ответы на анкету</h4>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <AnswerBlock q="Опыт участия в хакатонах" a="Участвовала в двух: Сбер.Хакатон 2024 и хакатон ИКИТ прошлой осенью. В обоих наша команда заняла призовые места."/>
-        <AnswerBlock q="Выбранный трек" a="Учебный процесс и расписание"/>
-        <AnswerBlock q="Собрала ли команду?" a="Да, есть команда из 4 человек — двое из ИКИТ, один из ИМиФИ, я. Ищем ещё одного дизайнера."/>
-        <AnswerBlock q="Ссылка на GitHub / портфолио (если есть)" a="github.com/annak-sfu" link/>
-      </div>
+      <DynamicAnswers answers={application.answers}/>
 
       <h4 style={{ margin: '24px 0 14px 0', fontSize: 15, fontWeight: 700, color: 'var(--fg)' }}>Информация об участнике</h4>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
