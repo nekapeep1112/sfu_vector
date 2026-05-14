@@ -169,7 +169,7 @@ export function HeroSection() {
           <div style={{ position: 'absolute', top: 0, left: 0, width: 280, height: 360, transform: `translate(${(mouse.x - 0.5) * -20}px, ${y * -0.08 + (mouse.y - 0.5) * -10}px) rotate(-3deg)`, transition: 'transform .25s ease-out' }}>
             <PhotoPH tone="#2563EB" label="Хакатон" height={360} style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
           </div>
-          <div style={{ position: 'absolute', top: 80, right: 0, width: 260, height: 320, transform: `translate(${(mouse.x - 0.5) * 25}px, ${y * 0.06 + (mouse.y - 0.5) * 15}px) rotate(4deg)`, transition: 'transform .25s ease-out' }}>
+          <div style={{ position: 'absolute', top: 80, right: 0, width: 260, height: 320, transform: `translate(${(mouse.x - 0.5) * 25}px, ${y * 0.06 + (mouse.y - 0.5) * 15}px) rotate(4deg)`, transition: 'transform .25s ease-out', zIndex: 2 }}>
             <PhotoPH tone="#7C3AED" label="Студ. весна" height={320} style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
           </div>
           <div style={{ position: 'absolute', bottom: 0, left: 60, width: 280, height: 220, transform: `translate(${(mouse.x - 0.5) * -15}px, ${y * -0.04 + (mouse.y - 0.5) * -8}px) rotate(2deg)`, transition: 'transform .25s ease-out' }}>
@@ -229,10 +229,6 @@ export function FeaturesSection() {
                 </div>
                 <h3 style={{ fontSize: 24, fontWeight: 700, margin: 0, marginBottom: 10, letterSpacing: '-0.01em' }}>{f.title}</h3>
                 <p style={{ fontSize: 15, color: 'var(--fg-2)', lineHeight: 1.55, margin: 0 }}>{f.text}</p>
-                <div style={{ marginTop: 20, display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: f.accent }}>
-                  Подробнее
-                  <span style={{ display: 'inline-block', transition: 'transform .3s' }}>→</span>
-                </div>
               </TiltCard>
             </Reveal>
           ))}

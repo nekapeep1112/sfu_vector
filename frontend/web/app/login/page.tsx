@@ -44,26 +44,6 @@ export default function LoginPage() {
             Войди в свой Вектор — продолжим с того места, где остановились.
           </p>
 
-          {/* OAuth-style entry (decorative — нет бэкэнда) */}
-          <button type="button"
-            className="btn btn-ghost"
-            style={{ width: '100%', justifyContent: 'center', height: 48, gap: 10, marginBottom: 16 }}
-          >
-            <span style={{
-              width: 22, height: 22, borderRadius: 6,
-              background: 'var(--grad)',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 11, fontWeight: 800, color: 'white',
-            }}>СФУ</span>
-            Войти через СФУ-аккаунт
-          </button>
-
-          <div className="row" style={{ gap: 12, margin: '4px 0 16px' }}>
-            <div style={{ flex: 1, height: 1, background: 'var(--border)' }}/>
-            <span style={{ fontSize: 11, color: 'var(--fg-4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>или</span>
-            <div style={{ flex: 1, height: 1, background: 'var(--border)' }}/>
-          </div>
-
           <form onSubmit={onSubmit} className="col gap-4">
             <div className="col" style={{ gap: 6 }}>
               <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--fg-4)' }}>Email</div>
