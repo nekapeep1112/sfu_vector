@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { Manrope, Inter, JetBrains_Mono } from 'next/font/google';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import './globals.css';
+
+const noFlashScript = `(function(){try{var t=localStorage.getItem('sfu-vector-theme');if(t!=='dark'&&t!=='light')t='light';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
 
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
@@ -31,7 +34,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={`${manrope.variable} ${inter.variable} ${jetbrains.variable}`}>
-      <body>{children}</body>
+      <body>
+        <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }
