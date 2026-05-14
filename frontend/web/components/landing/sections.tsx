@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { LogoMark } from '@/components/Logo';
+import { useTheme } from '@/components/theme/ThemeProvider';
 import { INSTITUTES } from '@/lib/mock-data';
 import { COUNTERS, STEPS, FEATURES, AUDIENCES, STORIES } from './data';
 import {
@@ -34,7 +35,12 @@ export function LandingNav() {
         <a href="#top" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <LogoMark px={32}/>
           <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.01em', color: 'var(--fg)' }}>
-            СФУ<span className="text-grad">.Вектор</span>
+            СФУ<span style={{
+              background: 'linear-gradient(135deg, #4F7FFF 0%, #9B5CFF 100%)',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+            }}>.Вектор</span>
           </div>
         </a>
         <nav style={{ display: 'flex', gap: 24, marginLeft: 24 }}>
@@ -44,12 +50,43 @@ export function LandingNav() {
                onMouseLeave={e => (e.currentTarget.style.color = 'var(--fg-2)')}>{i.label}</a>
           ))}
         </nav>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10, alignItems: 'center' }}>
+          <LandingThemeToggle />
           <Link href="/login" className="btn btn-ghost btn-sm">Войти</Link>
           <Link href="/onboarding" className="btn btn-primary btn-sm">Начать</Link>
         </div>
       </div>
     </header>
+  );
+}
+
+function LandingThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const isDark = theme === 'dark';
+  const [hover, setHover] = useState(false);
+  const label = isDark ? 'Светлая тема' : 'Тёмная тема';
+  return (
+    <button
+      onClick={toggle}
+      title={label}
+      aria-label={label}
+      aria-pressed={isDark}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        width: 36, height: 36, borderRadius: 10,
+        background: hover ? 'var(--bg-2)' : 'transparent',
+        border: '1px solid var(--border)',
+        color: 'var(--fg-2)',
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        cursor: 'pointer', transition: 'background .15s, border-color .15s, color .15s',
+        flexShrink: 0,
+      }}
+    >
+      {isDark
+        ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>}
+    </button>
   );
 }
 
