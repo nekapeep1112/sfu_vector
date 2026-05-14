@@ -34,6 +34,24 @@ export const EVENT_TYPES = {
 
 export type EventType = keyof typeof EVENT_TYPES;
 
+export interface InterestOption {
+  id: string;
+  label: string;
+  color: string;
+}
+
+export const INTEREST_OPTIONS: InterestOption[] = [
+  { id: 'education',     label: 'Образование',  color: '#3DD68C' },
+  { id: 'career',        label: 'Карьера',      color: '#4F7FFF' },
+  { id: 'community',     label: 'Сообщество',   color: '#9B5CFF' },
+  { id: 'sport',         label: 'Спорт',        color: '#F5A524' },
+  { id: 'science',       label: 'Наука',        color: '#3B82F6' },
+  { id: 'entertainment', label: 'Развлечения',  color: '#EC4899' },
+  { id: 'volunteering',  label: 'Волонтёрство', color: '#10B981' },
+  { id: 'media',         label: 'Медиа',        color: '#8B5CF6' },
+  { id: 'culture',       label: 'Культура',     color: '#F59E0B' },
+];
+
 export interface EventItem {
   id: number;
   type: EventType;
@@ -152,6 +170,7 @@ export interface CurrentUser {
   avatarGrad: string;
   memberships: number[];
   handle: string;
+  interests: string[];
 }
 
 export const CURRENT_USER: CurrentUser = {
@@ -163,6 +182,7 @@ export const CURRENT_USER: CurrentUser = {
   avatarGrad: 'linear-gradient(135deg, #F5A524, #F25E5E)',
   memberships: [1, 2, 3],
   handle: 'ip_2024',
+  interests: ['education', 'career', 'community'],
 };
 
 export type ApplicationStatus = 'pending' | 'auto' | 'rejected' | 'approved';

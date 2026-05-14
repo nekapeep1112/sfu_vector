@@ -1,5 +1,8 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { EVENTS } from '@/lib/mock-data';
+import { EVENTS, CURRENT_USER, INTEREST_OPTIONS } from '@/lib/mock-data';
 import { EventCover } from '../EventCover';
 
 type NotifType = 'success' | 'event' | 'info';
@@ -94,28 +97,124 @@ export function MyEventsList() {
   );
 }
 
-export function SettingsPanel() {
+export function SettingsPanel({ onChangeInterests }: { onChangeInterests?: () => void }) {
+  const interestsLabels = CURRENT_USER.interests
+    .map((id) => INTEREST_OPTIONS.find((o) => o.id === id)?.label)
+    .filter(Boolean)
+    .join(', ');
   return (
     <div className="card" style={{ padding: 24 }}>
       <div className="col gap-5">
         <SettingRow label="Институт" value="ИКИТ — Институт космических и информационных технологий"/>
         <SettingRow label="Общежитие" value="Общежитие №7"/>
         <SettingRow label="Email" value="petrov.iv@sfu-kras.ru"/>
-        <SettingRow label="Интересы" value="Образование, Карьера, Сообщество"/>
+        <SettingRow label="Интересы" value={interestsLabels} onAction={onChangeInterests}/>
         <SettingRow label="Уведомления" value="Email + Telegram"/>
       </div>
     </div>
   );
 }
 
-function SettingRow({ label, value }: { label: string; value: string }) {
+function SettingRow({ label, value, onAction }: { label: string; value: string; onAction?: () => void }) {
   return (
     <div className="row" style={{ justifyContent: 'space-between', paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
       <div className="col">
         <div style={{ fontSize: 12, color: 'var(--fg-4)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700 }}>{label}</div>
         <div style={{ fontSize: 14, color: 'var(--fg)', marginTop: 4 }}>{value}</div>
       </div>
-      <button className="btn btn-ghost btn-sm">Изменить</button>
+      <button className="btn btn-ghost btn-sm" onClick={onAction}>Изменить</button>
+    </div>
+  );
+}
+
+export function InterestsPanel() {
+  const [baseline, setBaseline] = useState<string[]>(CURRENT_USER.interests);
+  const [selected, setSelected] = useState<string[]>(CURRENT_USER.interests);
+  const [justSaved, setJustSaved] = useState(false);
+
+  const toggle = (id: string) => {
+    setJustSaved(false);
+    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
+  const handleSave = () => {
+    console.log('TODO: save interests to backend', selected);
+    setBaseline(selected);
+    setJustSaved(true);
+  };
+
+  const hasChanges =
+    JSON.stringify([...selected].sort()) !== JSON.stringify([...baseline].sort());
+
+  return (
+    <div className="card" style={{ padding: 24 }}>
+      <h3 className="h3" style={{ margin: 0 }}>Твои интересы</h3>
+      <p style={{ fontSize: 13, color: 'var(--fg-3)', marginTop: 6, lineHeight: 1.55, marginBottom: 24 }}>
+        Выбери темы, которые тебе интересны — поможем формировать ленту рекомендаций на главной. Можно выбрать несколько.
+      </p>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+        {INTEREST_OPTIONS.map((opt) => {
+          const on = selected.includes(opt.id);
+          return (
+            <button
+              key={opt.id}
+              onClick={() => toggle(opt.id)}
+              style={{
+                padding: '12px 18px',
+                borderRadius: 12,
+                background: on ? `color-mix(in oklab, ${opt.color} 14%, transparent)` : 'var(--bg-2)',
+                border: '1px solid ' + (on ? opt.color : 'var(--border)'),
+                color: on ? 'var(--fg)' : 'var(--fg-2)',
+                fontWeight: 600, fontSize: 13,
+                cursor: 'pointer',
+                transition: 'all .15s',
+                display: 'flex', alignItems: 'center', gap: 8,
+              }}
+            >
+              <span style={{
+                width: 8, height: 8, borderRadius: '50%',
+                background: opt.color, opacity: on ? 1 : 0.4,
+              }}/>
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div style={{
+        marginTop: 24, paddingTop: 20,
+        borderTop: '1px solid var(--border)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16,
+      }}>
+        <div style={{ fontSize: 13, color: 'var(--fg-3)' }}>
+          Выбрано: <strong style={{ color: 'var(--fg)' }}>{selected.length}</strong>
+          {selected.length === 0 && <span style={{ color: 'var(--amber)', marginLeft: 8 }}>· выбери хотя бы один интерес</span>}
+        </div>
+        {justSaved && !hasChanges ? (
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '8px 14px', borderRadius: 8,
+            background: 'rgba(61,214,140,0.12)',
+            border: '1px solid rgba(61,214,140,0.35)',
+            color: 'var(--green)', fontSize: 13, fontWeight: 600,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Сохранено
+          </div>
+        ) : (
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={handleSave}
+            disabled={selected.length === 0 || !hasChanges}
+            style={{ opacity: (selected.length === 0 || !hasChanges) ? 0.5 : 1 }}
+          >
+            Сохранить
+          </button>
+        )}
+      </div>
     </div>
   );
 }

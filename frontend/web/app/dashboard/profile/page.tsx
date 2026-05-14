@@ -1,11 +1,24 @@
 'use client';
 
-import { useState } from 'react';
-import { NotificationsList, ApplicationsList, MyEventsList, SettingsPanel } from '@/components/profile/Lists';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { NotificationsList, ApplicationsList, MyEventsList, SettingsPanel, InterestsPanel } from '@/components/profile/Lists';
+
+const TABS = ['Уведомления', 'Мои заявки', 'Мои мероприятия', 'Интересы', 'Настройки'] as const;
+type TabName = typeof TABS[number];
 
 export default function ProfilePage() {
-  const [tab, setTab] = useState<string>('Уведомления');
-  const tabs = ['Уведомления', 'Мои заявки', 'Мои мероприятия', 'Настройки'];
+  return (
+    <Suspense fallback={null}>
+      <ProfileContent/>
+    </Suspense>
+  );
+}
+
+function ProfileContent() {
+  const searchParams = useSearchParams();
+  const initialTab: TabName = searchParams.get('tab') === 'interests' ? 'Интересы' : 'Уведомления';
+  const [tab, setTab] = useState<TabName>(initialTab);
 
   return (
     <div style={{ maxWidth: 1240, margin: '0 auto', padding: 32 }}>
@@ -45,7 +58,7 @@ export default function ProfilePage() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: 4, padding: 4, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, marginBottom: 20, width: 'fit-content' }}>
-        {tabs.map(t => (
+        {TABS.map((t) => (
           <button key={t} onClick={() => setTab(t)} style={{
             padding: '10px 18px', borderRadius: 8,
             background: tab === t ? 'var(--grad-soft)' : 'transparent',
@@ -60,10 +73,11 @@ export default function ProfilePage() {
         ))}
       </div>
 
-      {tab === 'Уведомления' && <NotificationsList/>}
-      {tab === 'Мои заявки' && <ApplicationsList/>}
+      {tab === 'Уведомления'    && <NotificationsList/>}
+      {tab === 'Мои заявки'      && <ApplicationsList/>}
       {tab === 'Мои мероприятия' && <MyEventsList/>}
-      {tab === 'Настройки' && <SettingsPanel/>}
+      {tab === 'Интересы'        && <InterestsPanel/>}
+      {tab === 'Настройки'       && <SettingsPanel onChangeInterests={() => setTab('Интересы')}/>}
     </div>
   );
 }

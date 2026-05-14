@@ -117,8 +117,11 @@ export default function ApplicationsPage({ params }: { params: Promise<{ id: str
             onReject={() => console.log('TODO: reject', selected.id)}
             onMore={() => console.log('TODO: more menu', selected.id)}
             onOpenEvent={() => {
-              if (selected.event === 'Хакатон Siberian Hack 2026') router.push('/dashboard/events/1');
-              else console.log('TODO: open event card', selected.event);
+              if (selected.event === 'Хакатон Siberian Hack 2026') {
+                window.open('/dashboard/events/1', '_blank');
+              } else {
+                console.log('TODO: open event card', selected.event);
+              }
             }}
           />
         </div>

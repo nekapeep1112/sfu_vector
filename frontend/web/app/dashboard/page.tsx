@@ -1,4 +1,5 @@
-import { EVENTS, EVENT_TYPES } from '@/lib/mock-data';
+import Link from 'next/link';
+import { EVENTS, EVENT_TYPES, CURRENT_USER } from '@/lib/mock-data';
 import { EventCover, CapacityBar } from '@/components/EventCover';
 import { EntryCard } from '@/components/home/EntryCard';
 import { WheelPreview, EventsPreview, OrgsPreview } from '@/components/home/Previews';
@@ -39,27 +40,21 @@ export default function HomePage() {
             <span style={{ color: 'var(--fg-3)' }}>· твой вектор развития</span>
           </div>
           <h1 data-hero-text-light className="h1" style={{ margin: 0, marginBottom: 20, color: 'var(--fg)' }}>
-            Единое пространство<br/>студенческих <span className="text-grad">возможностей</span>
+            С возвращением, {CURRENT_USER.name.split(' ')[0]} 👋
           </h1>
           <p data-hero-text-light-2 style={{ fontSize: 17, color: 'var(--fg-2)', maxWidth: 520, lineHeight: 1.55, margin: 0, marginBottom: 32 }}>
-            Открой для себя организации, мероприятия и возможности для развития в&nbsp;Сибирском федеральном университете.
+            6 ближайших событий в афише и 2 заявки в обработке. Хорошего дня в&nbsp;кампусе.
           </p>
           <div className="row gap-3">
-            <button className="btn btn-primary" style={{ padding: '14px 22px', fontSize: 15 }}>
-              Найти своё сообщество
+            <Link href="/dashboard/events" className="btn btn-primary" style={{ padding: '14px 22px', fontSize: 15, textDecoration: 'none' }}>
+              К афише мероприятий
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </button>
-            <button className="btn btn-ghost" style={{ padding: '14px 22px', fontSize: 15 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4 L19 12 L5 20 Z"/></svg>
-              Как это работает
-            </button>
+            </Link>
+            <Link href="/dashboard/profile" className="btn btn-ghost" style={{ padding: '14px 22px', fontSize: 15, textDecoration: 'none' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4.5-7 8-7s7 2.5 8 7"/></svg>
+              Мой профиль
+            </Link>
           </div>
-        </div>
-
-        <div style={{ position: 'absolute', bottom: 24, right: 24, display: 'flex', gap: 6 }}>
-          {[0,1,2,3].map(i => (
-            <div key={i} style={{ width: i === 0 ? 24 : 6, height: 6, borderRadius: 3, background: i === 0 ? 'var(--fg)' : 'var(--border-strong)', transition: 'all .3s' }}/>
-          ))}
         </div>
       </section>
 
@@ -74,7 +69,7 @@ export default function HomePage() {
               </div>
               <p style={{ fontSize: 13, color: 'var(--fg-3)', margin: '4px 0 0' }}>На основе твоих интересов: IT, карьера, наука</p>
             </div>
-            <a href="#" style={{ fontSize: 13, color: 'var(--violet)', fontWeight: 500 }}>Настроить интересы →</a>
+            <Link href="/dashboard/profile?tab=interests" style={{ fontSize: 13, color: 'var(--violet)', fontWeight: 500, textDecoration: 'none' }}>Настроить интересы →</Link>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             {EVENTS.slice(0, 3).map(e => (
