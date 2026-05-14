@@ -242,7 +242,7 @@ export function PhotoPH({
   return (
     <div style={{
       height, borderRadius: 16, position: 'relative', overflow: 'hidden',
-      background: `linear-gradient(135deg, ${tone}26, ${tone}05), radial-gradient(120% 80% at 20% 10%, ${tone}40, transparent 60%), #F0F3F8`,
+      background: `linear-gradient(135deg, ${tone}26, ${tone}05), radial-gradient(120% 80% at 20% 10%, ${tone}40, transparent 60%), var(--surface-2)`,
       border: '1px solid var(--border)',
       ...style,
     }}>

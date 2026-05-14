@@ -52,8 +52,8 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
             <stop offset="1" stopColor="#9B5CFF"/>
           </radialGradient>
           <radialGradient id="hub-bg" cx="0.5" cy="0.5" r="0.7">
-            <stop offset="0" stopColor="#FFFFFF"/>
-            <stop offset="1" stopColor="#F5F7FA"/>
+            <stop offset="0" stopColor="var(--surface)"/>
+            <stop offset="1" stopColor="var(--bg-2)"/>
           </radialGradient>
           <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#4F7FFF" stopOpacity="0.6"/>
@@ -76,7 +76,7 @@ export function Wheel({ hovered, setHovered, selected, setSelected }: WheelProps
               onMouseLeave={() => setHovered(null)}
               onClick={() => setSelected(s.abbr)}>
               <path d={s.path}
-                fill={isActive ? 'rgba(37,99,235,0.10)' : isHover ? 'rgba(15,23,42,0.04)' : 'var(--surface)'}
+                fill={isActive ? 'rgba(37,99,235,0.10)' : isHover ? 'var(--surface-2)' : 'var(--surface)'}
                 stroke={isActive ? 'var(--blue)' : 'var(--border)'}
                 strokeWidth={isActive ? 2 : 1}
                 style={{ transition: 'all .2s' }}

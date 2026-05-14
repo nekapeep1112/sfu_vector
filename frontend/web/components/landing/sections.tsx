@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LogoMark } from '@/components/Logo';
 import { INSTITUTES } from '@/lib/mock-data';
 import { COUNTERS, STEPS, FEATURES, AUDIENCES, STORIES } from './data';
@@ -14,7 +14,6 @@ const NAV_ITEMS = [
   { href: '#features',  label: 'Возможности' },
   { href: '#audiences', label: 'Для кого' },
   { href: '#how',       label: 'Как это работает' },
-  { href: '#numbers',   label: 'Цифры' },
   { href: '#stories',   label: 'Истории' },
 ];
 
@@ -26,7 +25,7 @@ export function LandingNav() {
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       padding: compact ? '12px 32px' : '20px 32px',
       transition: 'padding .25s, background .25s, border-color .25s, box-shadow .25s',
-      background: compact ? 'rgba(255,255,255,0.8)' : 'transparent',
+      background: compact ? 'var(--surface)' : 'transparent',
       backdropFilter: compact ? 'saturate(180%) blur(14px)' : 'none',
       WebkitBackdropFilter: compact ? 'saturate(180%) blur(14px)' : 'none',
       borderBottom: compact ? '1px solid var(--border)' : '1px solid transparent',
@@ -74,7 +73,7 @@ export function HeroSection() {
     <section ref={heroRef} id="top" style={{
       position: 'relative', overflow: 'hidden',
       paddingTop: 160, paddingBottom: 120, minHeight: '100vh',
-      background: '#FFFFFF',
+      background: 'var(--surface)',
     }}>
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -125,25 +124,6 @@ export function HeroSection() {
                   <span style={{ position: 'relative', zIndex: 1 }}>Зарегистрироваться →</span>
                 </MagneticButton>
               </Link>
-              <button className="btn btn-ghost" style={{ padding: '16px 24px', fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--blue)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M0 0 L10 5 L0 10 Z"/></svg>
-                </span>
-                Посмотреть, как это работает
-              </button>
-            </div>
-          </Reveal>
-          <Reveal delay={740}>
-            <div style={{ marginTop: 40, display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ display: 'flex' }}>
-                {['#2563EB', '#7C3AED', '#059669', '#D97706'].map((c, i) => (
-                  <div key={i} style={{ width: 36, height: 36, borderRadius: '50%', background: `linear-gradient(135deg, ${c}, ${c}cc)`, border: '3px solid #FFFFFF', marginLeft: i ? -10 : 0, boxShadow: '0 2px 6px rgba(15,23,42,0.12)', animation: `bob 3s ease-in-out ${i * 200}ms infinite` }}/>
-                ))}
-              </div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 15 }}>3 200+ студентов</div>
-                <div style={{ fontSize: 13, color: 'var(--fg-3)' }}>уже нашли своих</div>
-              </div>
             </div>
           </Reveal>
         </div>
@@ -172,10 +152,10 @@ export function HeroSection() {
 export function MarqueeStrip() {
   const items = [...INSTITUTES, ...INSTITUTES];
   return (
-    <section style={{ padding: '36px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', background: '#FAFBFD', overflow: 'hidden' }}>
+    <section style={{ padding: '36px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', background: 'var(--bg-2)', overflow: 'hidden' }}>
       <div style={{ display: 'flex', gap: 12, animation: 'marquee 50s linear infinite', whiteSpace: 'nowrap' }}>
         {items.map((it, i) => (
-          <div key={i} className="chip" style={{ flexShrink: 0, fontSize: 13, padding: '8px 16px', background: '#FFFFFF', borderColor: 'var(--border)' }}>
+          <div key={i} className="chip" style={{ flexShrink: 0, fontSize: 13, padding: '8px 16px', background: 'var(--surface)', borderColor: 'var(--border)' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: it.color, display: 'inline-block', marginRight: 8 }}/>
             <strong style={{ marginRight: 6 }}>{it.abbr}</strong>
             <span style={{ color: 'var(--fg-3)', fontWeight: 400 }}>{it.name}</span>
@@ -189,7 +169,7 @@ export function MarqueeStrip() {
 // ─── Features ─────────────────────────────────────────
 export function FeaturesSection() {
   return (
-    <section id="features" style={{ padding: '120px 32px', background: '#FFFFFF' }}>
+    <section id="features" style={{ padding: '120px 32px', background: 'var(--surface)' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <Reveal>
           <div style={{ textAlign: 'center', marginBottom: 64 }}>
@@ -205,7 +185,7 @@ export function FeaturesSection() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
           {FEATURES.map((f, i) => (
             <Reveal key={i} delay={i * 100}>
-              <TiltCard accent={f.accent} className="card" style={{ padding: 32, height: '100%', borderRadius: 20, background: '#FFFFFF', border: '1px solid var(--border)' }}>
+              <TiltCard accent={f.accent} className="card" style={{ padding: 32, height: '100%', borderRadius: 20, background: 'var(--surface)', border: '1px solid var(--border)' }}>
                 <div style={{ width: 56, height: 56, borderRadius: 14, background: `linear-gradient(135deg, ${f.accent}, ${f.accent}aa)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 22, marginBottom: 20, boxShadow: `0 8px 20px ${f.accent}30`, position: 'relative', overflow: 'hidden' }}>
                   <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%)', animation: `shine 3.5s ${i * 600}ms ease-in-out infinite` }}/>
                   <span style={{ position: 'relative' }}>{String(i + 1).padStart(2, '0')}</span>
@@ -256,7 +236,7 @@ export function AudiencesSection() {
   };
 
   return (
-    <section ref={sectionRef} id="audiences" style={{ padding: '120px 32px', background: '#F5F7FA' }}>
+    <section ref={sectionRef} id="audiences" style={{ padding: '120px 32px', background: 'var(--bg-2)' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <Reveal>
           <div style={{ marginBottom: 56 }}>
@@ -272,7 +252,7 @@ export function AudiencesSection() {
               {AUDIENCES.map((a, i) => (
                 <div key={i} onClick={() => onPick(i)}
                   style={{ padding: 24, borderRadius: 16, cursor: 'pointer', transition: 'all .25s', position: 'relative', overflow: 'hidden',
-                    background: active === i ? '#FFFFFF' : 'transparent',
+                    background: active === i ? 'var(--surface)' : 'transparent',
                     border: '1px solid', borderColor: active === i ? 'var(--border)' : 'transparent',
                     boxShadow: active === i ? '0 4px 14px rgba(15,23,42,0.06)' : 'none' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: active === i ? 8 : 0 }}>
@@ -324,26 +304,52 @@ export function AudiencesSection() {
 }
 
 // ─── How it works ──────────────────────────────────────
+const STEP_ACCENTS = ['#2563EB', '#7C3AED', '#059669', '#D97706'];
+
+function StepIcon({ i }: { i: number }) {
+  const common = {
+    width: 28, height: 28, viewBox: '0 0 24 24',
+    fill: 'none', stroke: 'currentColor', strokeWidth: 2,
+    strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const,
+  };
+  switch (i) {
+    case 0: // Mail
+      return (
+        <svg {...common}>
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-10 5L2 7"/>
+        </svg>
+      );
+    case 1: // Sparkles
+      return (
+        <svg {...common}>
+          <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/>
+          <path d="M19 14l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7z"/>
+          <path d="M5 16l.5 1.5L7 18l-1.5.5L5 20l-.5-1.5L3 18l1.5-.5z"/>
+        </svg>
+      );
+    case 2: // Compass
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10"/>
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+        </svg>
+      );
+    case 3: // Send (paper plane)
+      return (
+        <svg {...common}>
+          <path d="m22 2-7 20-4-9-9-4z"/>
+          <path d="M22 2 11 13"/>
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 export function HowSection() {
-  const ref = useRef<HTMLElement>(null);
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onScroll = () => {
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const start = vh * 0.8;
-      const end = vh * 0.2;
-      const p = Math.max(0, Math.min(1, (start - r.top) / (start - end + r.height * 0.3)));
-      setProgress(p);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
   return (
-    <section ref={ref} id="how" style={{ padding: '120px 32px', background: '#FFFFFF', position: 'relative' }}>
+    <section id="how" style={{ padding: '120px 32px', background: 'var(--surface)', position: 'relative' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <Reveal>
           <div style={{ textAlign: 'center', marginBottom: 72 }}>
@@ -353,49 +359,40 @@ export function HowSection() {
             </h2>
           </div>
         </Reveal>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, position: 'relative' }}>
-          <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 80, zIndex: 0, pointerEvents: 'none', overflow: 'visible' }} preserveAspectRatio="none" viewBox="0 0 1000 80">
-            <defs>
-              <linearGradient id="step-line" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%"   stopColor="#2563EB"/>
-                <stop offset="33%"  stopColor="#7C3AED"/>
-                <stop offset="66%"  stopColor="#059669"/>
-                <stop offset="100%" stopColor="#D97706"/>
-              </linearGradient>
-              <mask id="step-mask">
-                <rect width="1000" height="80" fill="white"/>
-                <circle cx="125" cy="36" r="40" fill="black"/>
-                <circle cx="375" cy="36" r="40" fill="black"/>
-                <circle cx="625" cy="36" r="40" fill="black"/>
-                <circle cx="875" cy="36" r="40" fill="black"/>
-              </mask>
-            </defs>
-            <line x1="125" y1="36" x2="875" y2="36" stroke="var(--border-2)" strokeWidth="2" strokeDasharray="2 6" strokeLinecap="round" mask="url(#step-mask)"/>
-            <line x1="125" y1="36" x2={125 + (875 - 125) * progress} y2="36" stroke="url(#step-line)" strokeWidth="2.5" strokeLinecap="round" mask="url(#step-mask)" style={{ transition: 'all .15s linear' }}/>
-          </svg>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
           {STEPS.map((s, i) => {
-            const stepActive = progress > i * 0.25;
+            const accent = STEP_ACCENTS[i];
             return (
               <Reveal key={i} delay={i * 100}>
-                <div style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
+                <div style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 16,
+                  padding: 28,
+                  height: '100%',
+                  minHeight: 220,
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}>
                   <div style={{
-                    width: 72, height: 72, borderRadius: '50%',
-                    background: stepActive ? 'linear-gradient(135deg, #2563EB, #7C3AED)' : '#FFFFFF',
-                    border: '2px solid', borderColor: stepActive ? 'transparent' : 'var(--border-2)',
+                    width: 56, height: 56, borderRadius: 14,
+                    background: `linear-gradient(135deg, ${accent}, ${accent}aa)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 22, fontWeight: 800,
-                    color: stepActive ? 'white' : 'var(--fg-3)',
-                    margin: '0 auto 20px', letterSpacing: '-0.02em',
-                    boxShadow: stepActive ? '0 8px 24px rgba(37,99,235,0.35), 0 0 0 6px #FFFFFF' : '0 0 0 6px #FFFFFF',
-                    transition: 'all .5s cubic-bezier(.2,.8,.2,1)',
-                    transform: stepActive ? 'scale(1.05)' : 'scale(1)',
-                    position: 'relative',
+                    color: 'white', marginBottom: 16,
+                    boxShadow: `0 8px 20px ${accent}30`,
+                    position: 'relative', overflow: 'hidden',
+                    flexShrink: 0,
                   }}>
-                    {stepActive && <span style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '2px solid #2563EB', opacity: 0.3, animation: 'ping 2s ease-in-out infinite' }}/>}
-                    {s.n}
+                    <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%)', animation: `shine 3.5s ${i * 600}ms ease-in-out infinite` }}/>
+                    <span style={{ position: 'relative', display: 'inline-flex' }}><StepIcon i={i}/></span>
                   </div>
-                  <h3 style={{ fontSize: 19, fontWeight: 700, margin: 0, marginBottom: 10, letterSpacing: '-0.01em', color: stepActive ? 'var(--fg)' : 'var(--fg-2)', transition: 'color .4s' }}>{s.title}</h3>
-                  <p style={{ fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.55, margin: 0 }}>{s.text}</p>
+                  <div style={{
+                    fontSize: 11, color: 'var(--fg-4)',
+                    textTransform: 'uppercase', letterSpacing: '0.06em',
+                    fontWeight: 700, marginBottom: 8,
+                  }}>Шаг {s.n}</div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0, marginBottom: 10, letterSpacing: '-0.01em', color: 'var(--fg)' }}>{s.title}</h3>
+                  <p style={{ fontSize: 14, color: 'var(--fg-3)', lineHeight: 1.55, margin: 0 }}>{s.text}</p>
                 </div>
               </Reveal>
             );
@@ -477,58 +474,33 @@ export function NumbersSection() {
 
 // ─── Stories ───────────────────────────────────────────
 export function StoriesSection() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [drag, setDrag] = useState({ active: false, startX: 0, startScroll: 0 });
-  const onDown = (e: MouseEvent<HTMLDivElement>) => {
-    if (!trackRef.current) return;
-    setDrag({ active: true, startX: e.pageX, startScroll: trackRef.current.scrollLeft });
-    trackRef.current.style.cursor = 'grabbing';
-  };
-  const onMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!drag.active || !trackRef.current) return;
-    e.preventDefault();
-    trackRef.current.scrollLeft = drag.startScroll - (e.pageX - drag.startX);
-  };
-  const onUp = () => {
-    setDrag(d => ({ ...d, active: false }));
-    if (trackRef.current) trackRef.current.style.cursor = 'grab';
-  };
+  const items = [...STORIES, ...STORIES];
   return (
-    <section id="stories" style={{ padding: '120px 0', background: '#FFFFFF' }}>
+    <section id="stories" style={{ padding: '120px 0', background: 'var(--surface)', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px' }}>
         <Reveal>
-          <div style={{ marginBottom: 56, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 32, flexWrap: 'wrap' }}>
-            <div>
-              <div className="chip" style={{ marginBottom: 16, background: 'rgba(217,119,6,0.08)', borderColor: 'rgba(217,119,6,0.2)', color: '#D97706' }}>Истории</div>
-              <h2 style={{ fontSize: 56, fontWeight: 800, letterSpacing: '-0.025em', margin: 0, lineHeight: 1.05, maxWidth: 700 }}>
-                Реальные люди.<br/><span className="text-grad">Реальные результаты.</span>
-              </h2>
-            </div>
-            <div style={{ fontSize: 13, color: 'var(--fg-3)', display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 999, border: '1px dashed var(--border-2)', fontWeight: 500 }}>
-              <span style={{ display: 'inline-block', animation: 'pointLeft 2s ease-in-out infinite' }}>✦</span>
-              Перетащи или скроль
-            </div>
+          <div style={{ marginBottom: 56 }}>
+            <div className="chip" style={{ marginBottom: 16, background: 'rgba(217,119,6,0.08)', borderColor: 'rgba(217,119,6,0.2)', color: '#D97706' }}>Истории</div>
+            <h2 style={{ fontSize: 56, fontWeight: 800, letterSpacing: '-0.025em', margin: 0, lineHeight: 1.05, maxWidth: 700 }}>
+              Реальные люди.<br/><span className="text-grad">Реальные результаты.</span>
+            </h2>
           </div>
         </Reveal>
       </div>
-      <div ref={trackRef}
-        onMouseDown={onDown} onMouseMove={onMove} onMouseUp={onUp} onMouseLeave={onUp}
-        style={{ display: 'flex', gap: 20, padding: '8px 32px 24px max(32px, calc((100vw - 1280px) / 2 + 32px))', overflowX: 'auto', cursor: 'grab', scrollSnapType: 'x mandatory', userSelect: drag.active ? 'none' : 'auto' }}>
-        {[...STORIES, ...STORIES.slice(0, 2)].map((s, i) => (
-          <Reveal key={i} delay={(i % STORIES.length) * 100}>
-            <div className="card" style={{ width: 380, flexShrink: 0, padding: 32, scrollSnapAlign: 'start', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: -20, right: -20, width: 140, height: 140, borderRadius: '50%', background: `radial-gradient(circle, ${s.tone}20, transparent 70%)`, filter: 'blur(20px)' }}/>
-              <div style={{ fontSize: 56, lineHeight: 1, color: s.tone, fontFamily: 'Georgia, serif', position: 'relative' }}>“</div>
-              <p style={{ fontSize: 18, lineHeight: 1.5, color: 'var(--fg)', margin: 0, flex: 1, fontWeight: 500, position: 'relative' }}>{s.quote}</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 20, borderTop: '1px solid var(--border)', position: 'relative' }}>
-                <div style={{ width: 44, height: 44, borderRadius: '50%', background: `linear-gradient(135deg, ${s.tone}, ${s.tone}aa)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700, fontSize: 16, boxShadow: `0 6px 14px ${s.tone}40` }}>{s.name[0]}</div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 700 }}>{s.name}</div>
-                  <div style={{ fontSize: 12, color: 'var(--fg-3)' }}>{s.role}</div>
-                </div>
+      <div style={{ display: 'flex', gap: 20, padding: '8px 0 24px', animation: 'marquee 60s linear infinite', width: 'max-content' }}>
+        {items.map((s, i) => (
+          <div key={i} className="card" style={{ width: 380, flexShrink: 0, padding: 32, display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: -20, right: -20, width: 140, height: 140, borderRadius: '50%', background: `radial-gradient(circle, ${s.tone}20, transparent 70%)`, filter: 'blur(20px)' }}/>
+            <div style={{ fontSize: 56, lineHeight: 1, color: s.tone, fontFamily: 'Georgia, serif', position: 'relative' }}>“</div>
+            <p style={{ fontSize: 18, lineHeight: 1.5, color: 'var(--fg)', margin: 0, flex: 1, fontWeight: 500, position: 'relative' }}>{s.quote}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 20, borderTop: '1px solid var(--border)', position: 'relative' }}>
+              <div style={{ width: 44, height: 44, borderRadius: '50%', background: `linear-gradient(135deg, ${s.tone}, ${s.tone}aa)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700, fontSize: 16, boxShadow: `0 6px 14px ${s.tone}40` }}>{s.name[0]}</div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700 }}>{s.name}</div>
+                <div style={{ fontSize: 12, color: 'var(--fg-3)' }}>{s.role}</div>
               </div>
             </div>
-          </Reveal>
+          </div>
         ))}
       </div>
     </section>
@@ -538,7 +510,7 @@ export function StoriesSection() {
 // ─── Final CTA ─────────────────────────────────────────
 export function CtaSection() {
   return (
-    <section style={{ padding: '120px 32px', background: '#F5F7FA' }}>
+    <section style={{ padding: '120px 32px', background: 'var(--bg-2)' }}>
       <div style={{ maxWidth: 980, margin: '0 auto' }}>
         <Reveal>
           <div style={{ borderRadius: 28, padding: '80px 48px', background: 'linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #7C3AED 100%)', textAlign: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 30px 60px rgba(37,99,235,0.25)' }}>

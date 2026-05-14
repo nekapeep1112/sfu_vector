@@ -60,7 +60,7 @@ export function ProfileEditModal({ onClose }: Props) {
           border: '1px solid var(--border)',
           display: 'flex', flexDirection: 'column',
           overflow: 'hidden',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+          boxShadow: 'var(--shadow-pop)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>

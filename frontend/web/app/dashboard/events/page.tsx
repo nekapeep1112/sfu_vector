@@ -198,7 +198,7 @@ function DropdownButton({ value, defaultLabel, options, onChange }: {
             position: 'absolute', top: 'calc(100% + 4px)', left: 0,
             minWidth: 220, background: 'var(--surface)',
             border: '1px solid var(--border)', borderRadius: 10,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+            boxShadow: 'var(--shadow-pop)',
             padding: 4, zIndex: 10, maxHeight: 320, overflowY: 'auto',
           }}>
             {options.map((o) => {

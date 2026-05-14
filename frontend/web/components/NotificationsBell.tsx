@@ -88,7 +88,7 @@ export function NotificationsBell() {
             background: 'var(--surface)',
             border: '1px solid var(--border)',
             borderRadius: 14,
-            boxShadow: '0 20px 50px rgba(15,23,42,0.18), 0 4px 12px rgba(15,23,42,0.06)',
+            boxShadow: 'var(--shadow-pop)',
             zIndex: 100,
             overflow: 'hidden',
             display: 'flex', flexDirection: 'column',
