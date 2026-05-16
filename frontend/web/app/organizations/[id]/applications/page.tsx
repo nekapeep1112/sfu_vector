@@ -189,7 +189,6 @@ function EventsApplicationsPane({ orgId, router }: { orgId: number; router: Retu
             application={selected}
             onApprove={() => console.log('TODO: approve', selected.id)}
             onReject={() => console.log('TODO: reject', selected.id)}
-            onMore={() => console.log('TODO: more menu', selected.id)}
             onOpenEvent={() => {
               if (selected.event === 'Хакатон Siberian Hack 2026') {
                 window.open('/dashboard/events/1', '_blank');

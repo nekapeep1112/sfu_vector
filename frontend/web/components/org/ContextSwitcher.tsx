@@ -131,12 +131,6 @@ export function ContextSwitcher({ context, forceOpen = false, emptyMemberships =
             icon={<IconPlus/>}
             label="Создать организацию"
           />
-          <CtxAction
-            onClick={() => console.log('TODO: profile management')}
-            color="var(--fg-2)"
-            label="Управление аккаунтом"
-            trailing={<IconArrowR/>}
-          />
         </div>
       )}
     </div>
@@ -236,9 +230,6 @@ function IconCheck() {
 }
 function IconPlus() {
   return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>;
-}
-function IconArrowR() {
-  return <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>;
 }
 function IconEmpty() {
   return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-6 9 6v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>;
