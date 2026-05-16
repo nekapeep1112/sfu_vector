@@ -151,6 +151,13 @@ export function tonalShift(hex: string): string {
     '#3DD68C': '#1F8E58',
     '#F5A524': '#A8651A',
     '#F25E5E': '#9C2F2F',
+    '#3B82F6': '#1E40AF',
+    '#7C3AED': '#5B21B6',
+    '#10B981': '#047857',
+    '#EF4444': '#991B1B',
+    '#06B6D4': '#0E7490',
+    '#EC4899': '#9D174D',
+    '#8B5CF6': '#5B21B6',
   };
   return hexes[hex] || hex;
 }
@@ -547,3 +554,40 @@ export const MEMBERSHIP_APPLICATIONS: MembershipApplication[] = [
     status: 'approved',
   },
 ];
+
+export type OrgCategory =
+  | 'studsovet'
+  | 'volunteer'
+  | 'media'
+  | 'club'
+  | 'dorm_council'
+  | 'sport'
+  | 'other';
+
+export const ORG_CATEGORY_LABEL: Record<OrgCategory, string> = {
+  studsovet:    'Студенческий совет',
+  volunteer:    'Волонтёрский центр',
+  media:        'Медиа и журналистика',
+  club:         'Клуб по интересам',
+  dorm_council: 'Совет общежития',
+  sport:        'Спортивная секция',
+  other:        'Другое',
+};
+
+export interface OrgCreationApplication {
+  id: number;
+  applicant: { name: string; handle: string; institute: string; course: number };
+  proposed: {
+    name: string;
+    short: string;
+    description: string;
+    host: OrgHost;
+    category: OrgCategory;
+    color: string;
+  };
+  submittedAt: string;
+  status: 'pending' | 'approved' | 'rejected';
+  rejectionReason?: string;
+}
+
+export const ORG_CREATION_APPLICATIONS: OrgCreationApplication[] = [];

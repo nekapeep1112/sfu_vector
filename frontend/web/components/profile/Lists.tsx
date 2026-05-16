@@ -37,9 +37,9 @@ export function NotificationsList() {
 }
 
 type AppStatus = 'review' | 'approved' | 'registered' | 'rejected';
-type AppKind = 'event' | 'org';
+type AppKind = 'event' | 'org' | 'org_creation';
 
-function appHref(kind: AppKind, status: AppStatus, targetId: number): string {
+function appHref(kind: Exclude<AppKind, 'org_creation'>, status: AppStatus, targetId: number): string {
   if (kind === 'org') return `/dashboard/organizations/${targetId}`;
   switch (status) {
     case 'registered':
@@ -53,18 +53,20 @@ function appHref(kind: AppKind, status: AppStatus, targetId: number): string {
 }
 
 const KIND_CHIP: Record<AppKind, { label: string; color: string; bg: string }> = {
-  event: { label: 'Событие',      color: 'var(--blue)',   bg: 'color-mix(in oklab, var(--blue) 14%, transparent)' },
-  org:   { label: 'Организация',  color: 'var(--violet)', bg: 'color-mix(in oklab, var(--violet) 14%, transparent)' },
+  event:        { label: 'Событие',     color: 'var(--blue)',   bg: 'color-mix(in oklab, var(--blue) 14%, transparent)' },
+  org:          { label: 'Организация', color: 'var(--violet)', bg: 'color-mix(in oklab, var(--violet) 14%, transparent)' },
+  org_creation: { label: 'Создание',    color: 'var(--green)',  bg: 'color-mix(in oklab, var(--green) 14%, transparent)' },
 };
 
 export function ApplicationsList() {
   const apps: { kind: AppKind; org: string; status: AppStatus; tag: string; date: string; targetId: number }[] = [
-    { kind: 'event', org: 'Студенческий медиацентр',     status: 'review',     tag: 'На рассмотрении', date: '12 мая 2026', targetId: 2 },
-    { kind: 'event', org: 'Волонтёрский центр СФУ',       status: 'approved',   tag: 'Одобрено',        date: '8 мая 2026',  targetId: 3 },
-    { kind: 'event', org: 'Хакатон Siberian Hack 2026',  status: 'registered', tag: 'Зарегистрирован', date: '6 мая 2026',  targetId: 1 },
-    { kind: 'event', org: 'Клуб робототехники',           status: 'rejected',   tag: 'Отклонено',       date: '2 мая 2026',  targetId: 4 },
-    { kind: 'org',   org: 'Клуб AI Lab',                  status: 'review',     tag: 'На рассмотрении', date: '14 мая 2026', targetId: 1 },
-    { kind: 'org',   org: 'Студенческий медиацентр',     status: 'approved',   tag: 'Принято',         date: '1 мая 2026',  targetId: 3 },
+    { kind: 'event',        org: 'Студенческий медиацентр',     status: 'review',     tag: 'На рассмотрении', date: '12 мая 2026', targetId: 2 },
+    { kind: 'event',        org: 'Волонтёрский центр СФУ',       status: 'approved',   tag: 'Одобрено',        date: '8 мая 2026',  targetId: 3 },
+    { kind: 'event',        org: 'Хакатон Siberian Hack 2026',  status: 'registered', tag: 'Зарегистрирован', date: '6 мая 2026',  targetId: 1 },
+    { kind: 'event',        org: 'Клуб робототехники',           status: 'rejected',   tag: 'Отклонено',       date: '2 мая 2026',  targetId: 4 },
+    { kind: 'org',          org: 'Клуб AI Lab',                  status: 'review',     tag: 'На рассмотрении', date: '14 мая 2026', targetId: 1 },
+    { kind: 'org',          org: 'Студенческий медиацентр',     status: 'approved',   tag: 'Принято',         date: '1 мая 2026',  targetId: 3 },
+    { kind: 'org_creation', org: 'AI Club СФУ',                  status: 'review',     tag: 'На модерации',    date: '2 ч назад',   targetId: 0 },
   ];
   const colors: Record<AppStatus, string> = { review: 'var(--amber)', approved: 'var(--green)', registered: 'var(--blue)', rejected: 'var(--red)' };
   return (
@@ -86,7 +88,9 @@ export function ApplicationsList() {
               <div style={{ fontSize: 12, color: 'var(--fg-4)', marginTop: 4 }}>Заявка от {a.date}</div>
             </div>
             <span style={{ padding: '6px 12px', borderRadius: 8, background: `${colors[a.status]}20`, border: `1px solid ${colors[a.status]}40`, color: colors[a.status], fontSize: 12, fontWeight: 600 }}>{a.tag}</span>
-            <Link href={appHref(a.kind, a.status, a.targetId)} className="btn btn-ghost btn-sm">Открыть →</Link>
+            {a.kind !== 'org_creation' && (
+              <Link href={appHref(a.kind, a.status, a.targetId)} className="btn btn-ghost btn-sm">Открыть →</Link>
+            )}
           </div>
         );
       })}

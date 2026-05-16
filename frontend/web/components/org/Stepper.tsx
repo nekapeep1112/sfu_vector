@@ -11,11 +11,11 @@ const IconCheck = ({ s = 16 }: { s?: number }) => (
   </svg>
 );
 
-export function Stepper({ current }: { current: number }) {
+export function Stepper({ current, steps = STEPS }: { current: number; steps?: { n: number; label: string }[] }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', margin: '24px 0 32px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-        {STEPS.map((s, i) => {
+        {steps.map((s, i) => {
           const done = s.n < current;
           const active = s.n === current;
           const future = s.n > current;
@@ -44,7 +44,7 @@ export function Stepper({ current }: { current: number }) {
                   letterSpacing: '0.04em',
                 }}>{s.label}</div>
               </div>
-              {i < STEPS.length - 1 && (
+              {i < steps.length - 1 && (
                 <div style={{
                   width: 60, height: 2,
                   marginTop: 17,

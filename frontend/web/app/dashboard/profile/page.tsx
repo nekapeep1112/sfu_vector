@@ -19,7 +19,11 @@ export default function ProfilePage() {
 
 function ProfileContent() {
   const searchParams = useSearchParams();
-  const initialTab: TabName = searchParams.get('tab') === 'interests' ? 'Интересы' : 'Уведомления';
+  const tabParam = searchParams.get('tab');
+  const initialTab: TabName =
+    tabParam === 'interests'    ? 'Интересы' :
+    tabParam === 'applications' ? 'Мои заявки' :
+    'Уведомления';
   const [tab, setTab] = useState<TabName>(initialTab);
   const [editOpen, setEditOpen] = useState(false);
   const [daysOnPlatform, setDaysOnPlatform] = useState(0);

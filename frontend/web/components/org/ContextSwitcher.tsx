@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CURRENT_USER, ORGANIZATIONS, tonalShift, type OrgRole } from '@/lib/mock-data';
 
@@ -126,7 +127,8 @@ export function ContextSwitcher({ context, forceOpen = false, emptyMemberships =
 
           <div style={{ borderTop: '1px solid var(--border)', margin: '6px 0' }}/>
           <CtxAction
-            onClick={() => console.log('TODO: new org application')}
+            href="/dashboard/create-organization"
+            onClick={() => setOpen(false)}
             color="var(--blue)"
             icon={<IconPlus/>}
             label="Создать организацию"
@@ -193,31 +195,53 @@ function CtxRow({ grad, initials, title, sub, active, roleChip, onClick }: CtxRo
 }
 
 interface CtxActionProps {
-  onClick: () => void;
+  onClick?: () => void;
+  href?: string;
   color: string;
   icon?: React.ReactNode;
   label: string;
   trailing?: React.ReactNode;
 }
 
-function CtxAction({ onClick, color, icon, label, trailing }: CtxActionProps) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        width: '100%', display: 'flex', alignItems: 'center', gap: 8,
-        padding: '10px 12px', borderRadius: 8,
-        background: 'transparent', border: 'none',
-        color, fontSize: 13, fontWeight: 600,
-        cursor: 'pointer', textAlign: 'left',
-        transition: 'background .12s',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-2)'; }}
-      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-    >
+function CtxAction({ onClick, href, color, icon, label, trailing }: CtxActionProps) {
+  const baseStyle: React.CSSProperties = {
+    width: '100%', display: 'flex', alignItems: 'center', gap: 8,
+    padding: '10px 12px', borderRadius: 8,
+    background: 'transparent', border: 'none',
+    color, fontSize: 13, fontWeight: 600,
+    cursor: 'pointer', textAlign: 'left',
+    transition: 'background .12s',
+    textDecoration: 'none',
+    boxSizing: 'border-box',
+  };
+  const content = (
+    <>
       {icon && <span style={{ display: 'inline-flex' }}>{icon}</span>}
       <span style={{ flex: 1 }}>{label}</span>
       {trailing && <span style={{ display: 'inline-flex', color: 'var(--fg-4)' }}>{trailing}</span>}
+    </>
+  );
+  if (href) {
+    return (
+      <Link
+        href={href}
+        onClick={onClick}
+        style={baseStyle}
+        onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-2)'; }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+      >
+        {content}
+      </Link>
+    );
+  }
+  return (
+    <button
+      onClick={onClick}
+      style={baseStyle}
+      onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-2)'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+    >
+      {content}
     </button>
   );
 }
