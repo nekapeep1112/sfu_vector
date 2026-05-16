@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { LogoMark } from './Logo';
 import { ContextSwitcher, type SidebarContext } from './org/ContextSwitcher';
@@ -217,7 +217,9 @@ function SidebarItem({
 
 function ThemeToggle({ compact }: { compact: boolean }) {
   const { theme, toggle } = useTheme();
-  const isDark = theme === 'dark';
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && theme === 'dark';
   const [hover, setHover] = useState(false);
   const label = isDark ? 'Светлая тема' : 'Тёмная тема';
   return (

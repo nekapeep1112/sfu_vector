@@ -62,7 +62,9 @@ export function LandingNav() {
 
 function LandingThemeToggle() {
   const { theme, toggle } = useTheme();
-  const isDark = theme === 'dark';
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && theme === 'dark';
   const [hover, setHover] = useState(false);
   const label = isDark ? 'Светлая тема' : 'Тёмная тема';
   return (
