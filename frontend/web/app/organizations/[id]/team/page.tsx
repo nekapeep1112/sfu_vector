@@ -165,10 +165,36 @@ function TeamRow({
       <div style={{ fontSize: 13, color: 'var(--fg-3)' }}>12 марта 2024</div>
       <div ref={wrapperRef} style={{ position: 'relative' }}>
         <button
-          className="btn btn-ghost btn-sm"
-          style={{ width: 32, height: 32, padding: 0 }}
+          type="button"
           onClick={() => setOpen(o => !o)}
-        >⋯</button>
+          aria-label="Действия"
+          aria-expanded={open}
+          style={{
+            width: 32, height: 32, padding: 0, borderRadius: 8,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            background: open ? 'var(--bg-2)' : 'transparent',
+            border: '1px solid ' + (open ? 'var(--border-strong)' : 'var(--border)'),
+            color: open ? 'var(--fg)' : 'var(--fg-3)',
+            cursor: 'pointer',
+            transition: 'background .12s, border-color .12s, color .12s',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'var(--bg-2)';
+            e.currentTarget.style.borderColor = 'var(--border-strong)';
+            e.currentTarget.style.color = 'var(--fg)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = open ? 'var(--bg-2)' : 'transparent';
+            e.currentTarget.style.borderColor = open ? 'var(--border-strong)' : 'var(--border)';
+            e.currentTarget.style.color = open ? 'var(--fg)' : 'var(--fg-3)';
+          }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="5" cy="12" r="2"/>
+            <circle cx="12" cy="12" r="2"/>
+            <circle cx="19" cy="12" r="2"/>
+          </svg>
+        </button>
         {open && (
           <div style={{
             position: 'absolute', top: '100%', right: 0,

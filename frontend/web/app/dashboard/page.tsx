@@ -118,8 +118,7 @@ export default function HomePage() {
             href="/dashboard/orgs"
             title="Вступи в организацию"
             desc="50+ студенческих сообществ. Кто-то ищет именно тебя прямо сейчас."
-            cta="Идёт набор · 12"
-            ctaAccent
+            cta="Все организации"
             preview={<OrgsPreview/>}
           />
         </div>
