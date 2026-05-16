@@ -6,14 +6,17 @@ import {
   IconCheck, IconInbox, IconClock, IconBell,
 } from '@/components/org/icons';
 
-const MONTHS: { label: string; height: number }[] = [
-  { label: 'ноя', height: 45 },
-  { label: 'дек', height: 60 },
-  { label: 'янв', height: 30 },
-  { label: 'фев', height: 80 },
-  { label: 'мар', height: 95 },
-  { label: 'апр', height: 70 },
+const MONTHS: { label: string; value: number }[] = [
+  { label: 'ноя', value:  92 },
+  { label: 'дек', value: 124 },
+  { label: 'янв', value:  64 },
+  { label: 'фев', value: 168 },
+  { label: 'мар', value: 198 },
+  { label: 'апр', value: 148 },
 ];
+
+const VIEWS_30 = [120,145,130,160,178,205,175,190,212,228,215,248,272,260,250,290,310,294,325,342,320,358,382,365,402,420,405,440,462,480];
+const REGS_30  = [ 38, 45, 42, 52, 58, 66, 60, 62, 72, 80, 74, 84, 92, 88, 84, 98,104, 99,110,118,108,122,128,120,132,140,134,146,154,162];
 
 export default async function OrgAnalyticsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: idParam } = await params;
@@ -48,38 +51,126 @@ export default async function OrgAnalyticsPage({ params }: { params: Promise<{ i
         </div>
       </section>
 
-      <section>
+      <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <div className="card" style={{ padding: 24 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fg)' }}>Регистрации по месяцам</div>
+          <div style={{ fontSize: 12, color: 'var(--fg-3)', marginTop: 2 }}>За последние 6 месяцев</div>
+          <div style={{ marginTop: 16 }}>
+            <BarChart data={MONTHS}/>
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fg)' }}>Регистрации по месяцам</div>
-              <div style={{ fontSize: 12, color: 'var(--fg-3)', marginTop: 2 }}>За последние 6 месяцев</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--fg)' }}>Активность за 30 дней</div>
+              <div style={{ fontSize: 12, color: 'var(--fg-3)', marginTop: 2 }}>Просмотры карточек событий и регистрации</div>
+            </div>
+            <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'var(--fg-3)' }}>
+              <Legend color="var(--blue)" label="Просмотры"/>
+              <Legend color="var(--violet)" label="Регистрации"/>
             </div>
           </div>
-
-          <div style={{
-            height: 240, display: 'flex', alignItems: 'flex-end',
-            gap: 16, marginTop: 20, paddingBottom: 24, position: 'relative',
-          }}>
-            {MONTHS.map((m) => (
-              <div key={m.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                <div style={{
-                  width: 60, height: `${m.height}%`,
-                  background: 'var(--grad)', borderRadius: '8px 8px 0 0',
-                }}/>
-                <div style={{
-                  fontSize: 11, color: 'var(--fg-4)', textAlign: 'center',
-                  marginTop: 8, textTransform: 'lowercase',
-                }}>{m.label}</div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ marginTop: 16, fontSize: 13, color: 'var(--blue)', fontWeight: 600 }}>
-            Подробный отчёт →
+          <div style={{ marginTop: 16 }}>
+            <LineChart series={[
+              { color: 'var(--blue)',   data: VIEWS_30 },
+              { color: 'var(--violet)', data: REGS_30 },
+            ]}/>
           </div>
         </div>
       </section>
     </div>
+  );
+}
+
+function Legend({ color, label }: { color: string; label: string }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+      <span style={{ width: 10, height: 10, borderRadius: 3, background: color }}/>
+      {label}
+    </span>
+  );
+}
+
+function BarChart({ data }: { data: { label: string; value: number }[] }) {
+  const W = 600, H = 240, padL = 36, padR = 12, padT = 16, padB = 28;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const N = data.length;
+  const maxV = Math.max(...data.map((d) => d.value)) * 1.15;
+  const slotW = innerW / N;
+  const barW = Math.min(56, slotW * 0.55);
+  const y = (v: number) => padT + innerH - (v / maxV) * innerH;
+  const yTicks = [0, 0.25, 0.5, 0.75, 1];
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 240, display: 'block' }} preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--blue)"/>
+          <stop offset="1" stopColor="var(--violet)"/>
+        </linearGradient>
+      </defs>
+      {yTicks.map((t, i) => {
+        const yy = padT + innerH - t * innerH;
+        return (
+          <g key={i}>
+            <line x1={padL} y1={yy} x2={W - padR} y2={yy} stroke="var(--border)" strokeWidth="1" strokeDasharray={t === 0 ? '' : '2 4'} vectorEffect="non-scaling-stroke"/>
+            <text x={padL - 6} y={yy + 3} fontSize="9" fill="var(--fg-4)" textAnchor="end">{Math.round(t * maxV)}</text>
+          </g>
+        );
+      })}
+      {data.map((d, i) => {
+        const cx = padL + slotW * i + slotW / 2;
+        const by = y(d.value);
+        const bh = padT + innerH - by;
+        return (
+          <g key={i}>
+            <rect x={cx - barW / 2} y={by} width={barW} height={bh} rx="4" fill="url(#barGrad)"/>
+            <text x={cx} y={by - 6} fontSize="10" fontWeight="600" fill="var(--fg-2)" textAnchor="middle">{d.value}</text>
+            <text x={cx} y={H - 8} fontSize="10" fill="var(--fg-4)" textAnchor="middle">{d.label}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function LineChart({ series }: { series: { color: string; data: number[] }[] }) {
+  const W = 600, H = 240, padL = 36, padR = 12, padT = 12, padB = 24;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const N = series[0].data.length;
+  const maxV = Math.max(...series.flatMap((s) => s.data)) * 1.1;
+  const x = (i: number) => padL + (i / (N - 1)) * innerW;
+  const y = (v: number) => padT + innerH - (v / maxV) * innerH;
+  const yTicks = [0, 0.25, 0.5, 0.75, 1];
+  const xTicks = [0, 5, 10, 15, 20, 25, 29];
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 240, display: 'block' }} preserveAspectRatio="none">
+      {yTicks.map((t, i) => {
+        const yy = padT + innerH - t * innerH;
+        return (
+          <g key={i}>
+            <line x1={padL} y1={yy} x2={W - padR} y2={yy} stroke="var(--border)" strokeWidth="1" strokeDasharray={t === 0 ? '' : '2 4'}/>
+            <text x={padL - 6} y={yy + 3} fontSize="9" fill="var(--fg-4)" textAnchor="end">{Math.round(t * maxV)}</text>
+          </g>
+        );
+      })}
+      {series.map((s, si) => {
+        const pts = s.data.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`);
+        const areaPath = `M ${x(0).toFixed(1)},${(padT + innerH).toFixed(1)} L ${pts.join(' L ')} L ${x(N - 1).toFixed(1)},${(padT + innerH).toFixed(1)} Z`;
+        return (
+          <g key={si}>
+            <path d={areaPath} fill={s.color} opacity={0.08}/>
+            <polyline points={pts.join(' ')} fill="none" stroke={s.color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
+          </g>
+        );
+      })}
+      {xTicks.filter(i => i < N).map(i => (
+        <text key={i} x={x(i)} y={H - 6} fontSize="9" fill="var(--fg-4)" textAnchor="middle">{i + 1}</text>
+      ))}
+    </svg>
   );
 }
