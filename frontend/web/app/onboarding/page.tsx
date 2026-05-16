@@ -112,7 +112,7 @@ export default function OnboardingPage() {
                       borderRadius: 12,
                       background: on ? `${opt.color}20` : 'var(--bg-2)',
                       border: '1px solid ' + (on ? `${opt.color}80` : 'var(--border)'),
-                      color: on ? 'white' : 'var(--fg-2)',
+                      color: on ? 'var(--fg)' : 'var(--fg-2)',
                       fontWeight: 600, fontSize: 13,
                       transition: 'all .15s',
                       display: 'flex', alignItems: 'center', gap: 8,

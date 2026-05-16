@@ -1,6 +1,6 @@
 import {
   LandingNav, HeroSection, MarqueeStrip, FeaturesSection, AudiencesSection,
-  HowSection, NumbersSection, StoriesSection, CtaSection, LandingFooter,
+  HowSection, StoriesSection, CtaSection, LandingFooter,
 } from '@/components/landing/sections';
 
 export default function LandingPage() {
@@ -12,7 +12,6 @@ export default function LandingPage() {
       <FeaturesSection/>
       <AudiencesSection/>
       <HowSection/>
-      <NumbersSection/>
       <StoriesSection/>
       <CtaSection/>
       <LandingFooter/>
