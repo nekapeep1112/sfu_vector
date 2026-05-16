@@ -234,15 +234,28 @@ export function FloatIcon({
 
 // ─── Photo placeholder ──────────────────────────────────────
 export function PhotoPH({
-  tone = '#2563EB', label = '', height = 320, style,
+  tone = '#2563EB', label = '', height = 320, style, image, imageFit = 'cover',
 }: {
   tone?: string; label?: string; height?: number; style?: CSSProperties;
+  image?: string; imageFit?: 'cover' | 'contain';
 }) {
   const id = `grid-${tone.replace('#', '')}`;
+  if (image) {
+    return (
+      <div style={{
+        height, borderRadius: 16, position: 'relative', overflow: 'hidden',
+        background: imageFit === 'contain' ? '#FFFFFF' : undefined,
+        border: '1px solid var(--border)',
+        ...style,
+      }}>
+        <img src={image} alt={label} style={{ width: '100%', height: '100%', objectFit: imageFit, display: 'block' }}/>
+      </div>
+    );
+  }
   return (
     <div style={{
       height, borderRadius: 16, position: 'relative', overflow: 'hidden',
-      background: `linear-gradient(135deg, ${tone}26, ${tone}05), radial-gradient(120% 80% at 20% 10%, ${tone}40, transparent 60%), var(--surface-2)`,
+      background: `linear-gradient(135deg, ${tone}33, ${tone}0d), radial-gradient(120% 80% at 20% 10%, ${tone}55, transparent 60%), ${tone}1a`,
       border: '1px solid var(--border)',
       ...style,
     }}>

@@ -7,7 +7,7 @@ import { useTheme } from '@/components/theme/ThemeProvider';
 import { INSTITUTES } from '@/lib/mock-data';
 import { COUNTERS, STEPS, FEATURES, AUDIENCES, STORIES } from './data';
 import {
-  Reveal, WordReveal, MagneticButton, TiltCard, ScrambleNumber, FloatIcon, PhotoPH,
+  Reveal, WordReveal, MagneticButton, TiltCard, ScrambleNumber, PhotoPH,
   useScrollY,
 } from './primitives';
 
@@ -167,18 +167,14 @@ export function HeroSection() {
 
         <div style={{ position: 'relative', height: 560 }}>
           <div style={{ position: 'absolute', top: 0, left: 0, width: 280, height: 360, transform: `translate(${(mouse.x - 0.5) * -20}px, ${y * -0.08 + (mouse.y - 0.5) * -10}px) rotate(-3deg)`, transition: 'transform .25s ease-out' }}>
-            <PhotoPH tone="#2563EB" label="Хакатон" height={360} style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
+            <PhotoPH tone="#2563EB" label="Хакатон" height={360} image="/landing/hakaton.jpg" style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
           </div>
           <div style={{ position: 'absolute', top: 80, right: 0, width: 260, height: 320, transform: `translate(${(mouse.x - 0.5) * 25}px, ${y * 0.06 + (mouse.y - 0.5) * 15}px) rotate(4deg)`, transition: 'transform .25s ease-out', zIndex: 2 }}>
-            <PhotoPH tone="#7C3AED" label="Студ. весна" height={320} style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
+            <PhotoPH tone="#DC2626" label="ППОС" height={320} image="/landing/ppos.webp" imageFit="contain" style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
           </div>
           <div style={{ position: 'absolute', bottom: 0, left: 60, width: 280, height: 220, transform: `translate(${(mouse.x - 0.5) * -15}px, ${y * -0.04 + (mouse.y - 0.5) * -8}px) rotate(2deg)`, transition: 'transform .25s ease-out' }}>
-            <PhotoPH tone="#059669" label="Волонтёрство" height={220} style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
+            <PhotoPH tone="#2563EB" label="Молодёжный центр" height={220} image="/landing/mc.webp" style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.15)' }}/>
           </div>
-          <FloatIcon x={-30} y={140} size={48} label="🎯" tone="#D97706" delay={400}  scrollY={y} factor={-0.06}/>
-          <FloatIcon x={320} y={20}  size={44} label="⚡" tone="#7C3AED" delay={800}  scrollY={y} factor={0.05}/>
-          <FloatIcon x={-10} y={420} size={52} label="✦" tone="#059669" delay={1200} scrollY={y} factor={-0.04}/>
-          <FloatIcon x={380} y={400} size={48} label="◆" tone="#2563EB" delay={1600} scrollY={y} factor={0.03}/>
         </div>
       </div>
     </section>
@@ -324,7 +320,7 @@ export function AudiencesSection() {
                     transition: 'opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1)',
                     pointerEvents: active === i ? 'auto' : 'none',
                   }}>
-                    <PhotoPH tone={tone} label={a.tag} height={520} style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.12)' }}/>
+                    <PhotoPH tone={tone} label={a.tag} height={520} image={a.image} style={{ boxShadow: '0 20px 50px rgba(15,23,42,0.12)' }}/>
                   </div>
                 );
               })}
